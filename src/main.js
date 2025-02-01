@@ -1,6 +1,8 @@
 import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { MapControls } from "three/addons/controls/MapControls.js";
+import { select } from "three/tsl";
 
 let readyToStart = false;
 
@@ -12,11 +14,15 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000
 ); // field of view, aspect ratio, near, far
+camera.layers.enable(1);
 
 const renderer = new THREE.WebGLRenderer({
     // Create the renderer
     canvas: document.querySelector("#bg"),
 });
+// Set the renderer size to match the canvas size
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
 
 // Set the renderer size and camera position
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -25,7 +31,11 @@ camera.position.setZ(50);
 renderer.render(scene, camera);
 
 // Add orbit controls
-const controls = new OrbitControls(camera, renderer.domElement);
+// const controls = new OrbitControls(camera, renderer.domElement);
+const controls = new MapControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.03;
+controls.enablePan = false;
 
 // Setting intial geometry and material for the sun and planets
 const geometrySun = new THREE.SphereGeometry(10, 32, 32);
@@ -42,12 +52,14 @@ const lightHelper = new THREE.PointLightHelper(pointLight);
 //const gridHelper = new THREE.GridHelper(200, 50);
 // scene.add(lightHelper, gridHelper);
 
+// RAYCASTER
+
 // Load the planet textures
 const textureLoader = new THREE.TextureLoader();
 let textureCounter = 1;
 const planetTextures = [];
 
-let planetsArray;
+let planetsArray = [];
 let planetMaterials = [];
 let sun;
 const loadTexture = (counter) => {
@@ -91,6 +103,8 @@ class Planet {
         this.textureCode = 0;
         this.currentAngle = 0;
         this.lastUpdateTime = Date.now();
+        this.selected = false;
+        this.cameraFollow = false;
     }
     updatePlanetSize(size) {
         this.size = size;
@@ -138,6 +152,7 @@ function createPlanets() {
     const planetsArray = Array(10).fill().map(getPlanet);
     let distanceFromLast = 180;
     for (let i = 1; i < planetsArray.length + 1; i++) {
+        planetsArray[i - 1].mesh.name = `Planet ${i}`;
         planetsArray[i - 1].name = `Planet ${i}`;
         planetsArray[i - 1].distance = distanceFromLast;
         distanceFromLast += 180;
@@ -161,6 +176,7 @@ function createPlanets() {
 // Add planet functionality
 let planetCount = 0;
 function handlePlanets(planets) {
+    // *TODO FUTURE WORK - EDIT THESE FUNCTIONS OUT OF GLOBAL SCOPE
     // Update planet size
     const updatePlanetSize = (index) => {
         const size = document.getElementById(`planet-size-${index}`).value;
@@ -204,6 +220,7 @@ function handlePlanets(planets) {
         planets[index].updatePlanetDistance(distance);
     };
     window.updatePlanetDistance = updatePlanetDistance;
+    // *TODO -------------------------------------------------------*/
 
     // Add planet control forms
     let planetCountCheck = planetCount;
@@ -323,6 +340,7 @@ function stars() {
     const generateStars = () => {
         // Nested function for generating stars
         const star = new THREE.Mesh(geometryStar, materialStar);
+        star.layers.set(1);
         const [x, y, z] = Array(3)
             .fill()
             .map(() => THREE.MathUtils.randFloatSpread(2000));
@@ -344,6 +362,37 @@ function pausePlay() {
 }
 const pauseButton = document.getElementById("pause-button");
 pauseButton.addEventListener("click", pausePlay);
+
+// Camera Select Test functionality
+let isCameraHelio = true;
+console.log(isCameraHelio);
+function selectCameraFollow() {
+    console.log("Select Camera Follow");
+    if (isCameraHelio) {
+        isCameraHelio = false;
+        console.log(isCameraHelio);
+    } else {
+        isCameraHelio = true;
+        camera.position.set(0, 0, 50);
+        camera.lookAt(0, 0, 0);
+        console.log(isCameraHelio);
+    }
+}
+
+function updateCameraMode() {
+    if (!isCameraHelio) {
+        console.log("Camera Follow FUNC");
+        console.log(camera);
+        camera.lookAt(planetsArray[0].mesh.position);
+    }
+    for (let p of planetsArray) {
+        if (p.cameraFollow) {
+            camera.lookAt(p.mesh.position);
+        }
+    }
+}
+const selectButton = document.getElementById("select-button");
+selectButton.addEventListener("click", selectCameraFollow);
 
 // Function to animate the scene/loop
 function animate() {
@@ -370,9 +419,13 @@ function animate() {
             p.mesh.rotation.y += p.spinSpeed;
         });
     }
+    arrow();
     sun.rotation.y += 0.0005;
+    updateSelectedPlanetColor();
     requestAnimationFrame(animate);
     controls.update();
+    updateCameraMode();
+    //camera.lookAt(planetsArray[0].mesh.position);
     renderer.render(scene, camera);
 }
 
@@ -382,3 +435,71 @@ const checkReadyToStart = setInterval(() => {
         clearInterval(checkReadyToStart);
     }
 }, 100);
+
+const raycaster = new THREE.Raycaster();
+
+document.addEventListener("mousemove", onMouseMove);
+function onMouseMove(event) {
+    //console.log('Mouse Down Event');
+    const mouseCoords = new THREE.Vector2(
+        (event.clientX / renderer.domElement.clientWidth) * 2 - 1,
+        -(event.clientY / renderer.domElement.clientHeight) * 2 + 1
+    );
+    raycaster.setFromCamera(mouseCoords, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+    if (intersects.length > 0) {
+        //console.log(intersects);
+        const intersectedObject = intersects[0].object;
+        //console.log(intersectedObject.name);
+        for (let p of planetsArray) {
+            if (p.name === intersectedObject.name) {
+                //console.log(`Selected ${p.name}`);
+                p.selected = true;
+            }
+        }
+    } else {
+        for (let p of planetsArray) {
+            p.selected = false;
+        }
+        //console.log('No intersections found');
+    }
+}
+
+document.addEventListener("mousedown", onMouseDown);
+function onMouseDown(event) {
+    const mouseCoords = new THREE.Vector2(
+        (event.clientX / renderer.domElement.clientWidth) * 2 - 1,
+        -(event.clientY / renderer.domElement.clientHeight) * 2 + 1
+    );
+    raycaster.setFromCamera(mouseCoords, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+    if (intersects.length > 0) {
+        //console.log(intersects);
+        const intersectedObject = intersects[0].object;
+        //console.log(intersectedObject.name);
+        for (let p of planetsArray) {
+            if (p.name === intersectedObject.name) {
+                //console.log(`Selected ${p.name}`);
+                p.cameraFollow = true;
+            }
+        }
+    } else {
+        for (let p of planetsArray) {
+            p.cameraFollow = false;
+        }
+        //console.log('No intersections found');
+    }
+}
+
+function updateSelectedPlanetColor() {
+    const rColor = new THREE.Color(0xff0000);
+    if (planetsArray) {
+        for (let p of planetsArray) {
+            if (p.selected) {
+                p.mesh.material.color = rColor;
+            } else {
+                p.mesh.material.color = new THREE.Color(0xffffff);
+            }
+        }
+    }
+}
