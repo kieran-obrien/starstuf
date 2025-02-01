@@ -80,9 +80,9 @@ const checkTexturesLoaded = setInterval(() => {
 
 // Set planet class
 class Planet {
-    constructor(size, distanceFromLast, orbitSpeed, mesh) {
+    constructor(size, orbitSpeed, mesh) {
         this.size = size;
-        this.distance = distanceFromLast;
+        this.distance = 90;
         this.speed = orbitSpeed;
         this.spinSpeed = 0.00125;
         this.mesh = mesh;
@@ -105,6 +105,9 @@ class Planet {
         this.spinSpeed = spinSpeed / 800;
         console.log(this.spinSpeed);
     }
+    updatePlanetDistance(distance) {
+        this.distance = distance * 10;
+    }
 }
 
 // Create and populate array of ten planet objects
@@ -116,7 +119,6 @@ function getPlanet() {
     });
     return new Planet(
         1,
-        45,
         0.000125,
         new THREE.Mesh(geometryPlanet, planetMaterialInit)
     );
@@ -134,8 +136,12 @@ function createPlanets() {
             return material;
         });
     const planetsArray = Array(10).fill().map(getPlanet);
+    let distanceFromLast = 180;
     for (let i = 1; i < planetsArray.length + 1; i++) {
         planetsArray[i - 1].name = `Planet ${i}`;
+        planetsArray[i - 1].distance = distanceFromLast;
+        distanceFromLast += 180;
+        console.log(planetsArray[i - 1].distance);
     }
     const sun = new THREE.Mesh(geometrySun, planetMaterials[3]);
 
@@ -190,6 +196,15 @@ function handlePlanets(planets) {
     };
     window.updatePlanetSpinSpeed = updatePlanetSpinSpeed;
 
+    // Update planet distance
+    const updatePlanetDistance = (index) => {
+        const distance = document.getElementById(
+            `planet-distance-${index}`
+        ).value;
+        planets[index].updatePlanetDistance(distance);
+    };
+    window.updatePlanetDistance = updatePlanetDistance;
+
     // Add planet control forms
     let planetCountCheck = planetCount;
     planetCount = document.getElementById("planet-count").value;
@@ -201,8 +216,11 @@ function handlePlanets(planets) {
         allPlanets.forEach((p, index) => {
             p.remove();
         });
+        let planetDistanceOffsetLower = 4.5;
+        let planetDistanceOffsetUpper = 18;
         for (let i = 0; i < planetCount; i++) {
             const form = document.createElement("form");
+            console.log(planetDistanceOffsetLower, planetDistanceOffsetUpper);
             form.innerHTML = `<label for="planet-size">Planet ${
                 i + 1
             } Size</label>
@@ -210,8 +228,8 @@ function handlePlanets(planets) {
                 type="range"
                 id="planet-size-${i}"
                 name="planet-size"
-                min="1"
-                max="10"
+                min=".5"
+                max="4"
                 step="0.1"
                 value="${planetsArray[i].size}"
             />
@@ -235,12 +253,31 @@ function handlePlanets(planets) {
                 step="0.1"
                 value="${planetsArray[i].spinSpeed}"
             />
+            <label for="planet-distance">Planet ${i + 1} Distance</label>
+            <input oninput="updatePlanetDistance(${i})"
+                type="range"
+                id="planet-distance-${i}"
+                name="planet-distance"
+                min="${planetDistanceOffsetLower}"
+                max="${planetDistanceOffsetUpper}"
+                step="0.1"
+                value="${planetsArray[i].distance / 10}"
+            />
             <label for="planet-texture">Planet ${i + 1} Texture</label>
             <input onclick="updatePlanetTexture(${i})"
                 type="button"
                 id="planet-texture-${i}"
                 name="planet-texture"
             />`;
+
+            if (i === 0) {
+                planetDistanceOffsetLower = 0;
+                planetDistanceOffsetLower += 27;
+                planetDistanceOffsetUpper += 27;
+            } else {
+                planetDistanceOffsetLower += 18;
+                planetDistanceOffsetUpper += 18;
+            }
 
             // Set div to append control forms to
             const planetSizeDiv = document.getElementById(
@@ -312,10 +349,10 @@ pauseButton.addEventListener("click", pausePlay);
 function animate() {
     // arrow(); // Arrow orbit effect
     handlePlanets(planetsArray); // Handle planet controls
-    let orbitRadius = 120;
     if (!isPaused) {
         // If not paused, update the planets
         const currentTime = Date.now();
+        let distanceCounter = 0;
         planetsArray.forEach((p) => {
             // Calculate the change in angle based on the speed and elapsed time
             const deltaAngle = (currentTime - p.lastUpdateTime) * p.speed;
@@ -324,11 +361,11 @@ function animate() {
 
             // Set the new position based on the current angle
             p.mesh.position.set(
-                Math.cos(p.currentAngle) * orbitRadius,
+                Math.cos(p.currentAngle) * (p.distance + distanceCounter),
                 0,
-                Math.sin(p.currentAngle) * orbitRadius
+                Math.sin(p.currentAngle) * (p.distance + distanceCounter)
             );
-            orbitRadius += 120;
+            distanceCounter += 90;
             // Rotate the planet
             p.mesh.rotation.y += p.spinSpeed;
         });
