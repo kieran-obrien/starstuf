@@ -54,3 +54,18 @@ form {
     font-weight: bold;
     font-size: 1.5em;
 }
+
+#offcanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+
+}
+
+h5 {
+    font-size: 3em;
+    font-weight: bolder;
+    font-family: Bungee Hairline;
+    color: white;
+}

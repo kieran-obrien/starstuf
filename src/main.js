@@ -481,6 +481,8 @@ function onMouseDown(event) {
             if (p.name === intersectedObject.name) {
                 //console.log(`Selected ${p.name}`);
                 p.cameraFollow = true;
+                const index = planetsArray.indexOf(p);
+                showControls(p, index);
             }
         }
     } else {
@@ -503,3 +505,68 @@ function updateSelectedPlanetColor() {
         }
     }
 }
+
+function showControls(planet, i) {
+    console.log(planet);
+    const header = document.getElementById("offcanvasExampleLabel");
+    header.innerHTML = `${planet.name} Controls`;
+    const offcanvasElement = document.getElementById("offcanvasExample");
+    const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
+    if (offcanvasElement.lastElementChild.nodeName === "FORM") {
+        offcanvasElement.removeChild(offcanvasElement.lastElementChild);
+    }
+    const planetHTML = `<label for="planet-size"> ${planet.name} Size</label>
+            <input oninput="updatePlanetSize(${i})"
+                type="range"
+                id="planet-size-${i}"
+                name="planet-size"
+                min=".5"
+                max="4"
+                step="0.1"
+                value="${planetsArray[i].size}"
+            />
+            <label for="orbit-speed">Planet ${i + 1} Orbit Speed</label>
+            <input oninput="updatePlanetSpeed(${i})"
+                type="range"
+                id="orbit-speed-${i}"
+                name="orbit-speed"
+                min="1"
+                max="10"
+                step="0.1"
+                value="${planetsArray[i].speed}"
+            />
+            <label for="planet-spin">Planet ${i + 1} Spin Speed</label>
+            <input oninput="updatePlanetSpinSpeed(${i})"
+                type="range"
+                id="planet-spin-${i}"
+                name="planet-spin"
+                min="1"
+                max="12"
+                step="0.1"
+                value="${planetsArray[i].spinSpeed}"
+            />
+            <label for="planet-texture">Planet ${i + 1} Texture</label>
+            <input onclick="updatePlanetTexture(${i})"
+                type="button"
+                id="planet-texture-${i}"
+                name="planet-texture"
+            />`;
+    const form = document.createElement("form");
+    form.innerHTML = planetHTML;
+    offcanvasElement.appendChild(form);
+    bsOffcanvas.show();
+}
+
+/*
+<label for="planet-distance">Planet ${i + 1} Distance</label>
+<input oninput="updatePlanetDistance(${i})"
+    type="range"
+    id="planet-distance-${i}"
+    name="planet-distance"
+    min="${planetDistanceOffsetLower}"
+    max="${planetDistanceOffsetUpper}"
+    step="0.1"
+    value="${planetsArray[i].distance / 10}"
+/>
+*/
+
