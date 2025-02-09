@@ -8,26 +8,47 @@ let readyToStart = false;
 
 // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
+const previewScene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
     0.1,
     1000
 ); // field of view, aspect ratio, near, far
+
 camera.layers.enable(1);
 
 const renderer = new THREE.WebGLRenderer({
     // Create the renderer
     canvas: document.querySelector("#bg"),
 });
+
+const littleRenderer = new THREE.WebGLRenderer({
+    // Create the renderer
+    canvas: document.querySelector("#planet-preview-canvas"),
+});
 // Set the renderer size to match the canvas size
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
+
+// Set the renderer size to match the canvas size
+const canvas = document.querySelector("#planet-preview-canvas");
+const camera2 = new THREE.PerspectiveCamera(
+    75,
+    canvas.clientWidth / canvas.clientHeight,
+    0.1,
+    1000
+); // field of view, aspect ratio, near, far
+console.log(canvas.clientWidth, canvas.clientHeight);
+littleRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
+littleRenderer.setPixelRatio(window.devicePixelRatio);
+
 
 // Set the renderer size and camera position
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 camera.position.setZ(50);
+camera2.position.setZ(10);
 renderer.render(scene, camera);
 
 // Add orbit controls
@@ -47,10 +68,12 @@ const geometryPlanet = new THREE.SphereGeometry(4, 15, 15);
 const pointLight = new THREE.PointLight(0xffffff, 1000, 1000);
 pointLight.position.set(5, 20, 5);
 const ambientLight = new THREE.AmbientLight(0xffffff);
-scene.add(ambientLight, pointLight);
+const ambientLight2 = new THREE.AmbientLight(0xffffff);
+scene.add(ambientLight);
+previewScene.add(ambientLight2);
 const lightHelper = new THREE.PointLightHelper(pointLight);
-//const gridHelper = new THREE.GridHelper(200, 50);
-// scene.add(lightHelper, gridHelper);
+const gridHelper = new THREE.GridHelper(200, 50);
+previewScene.add(lightHelper, gridHelper);
 
 // RAYCASTER
 
@@ -95,6 +118,7 @@ class Planet {
     constructor(size, orbitSpeed, mesh) {
         this.size = size;
         this.distance = 90;
+        this.minmaxdist = [0, 0]; // Values for min and max distance range input
         this.speed = orbitSpeed;
         this.spinSpeed = 0.00125;
         this.mesh = mesh;
@@ -107,6 +131,7 @@ class Planet {
         this.cameraFollow = false;
     }
     updatePlanetSize(size) {
+        console.log("Are we here?");
         this.size = size;
         this.mesh.scale.set(size, size, size);
     }
@@ -156,6 +181,10 @@ function createPlanets() {
         planetsArray[i - 1].name = `Planet ${i}`;
         planetsArray[i - 1].distance = distanceFromLast;
         distanceFromLast += 180;
+        planetsArray[i - 1].minmaxdist = [
+            distanceFromLast - 270,
+            distanceFromLast - 90,
+        ];
         console.log(planetsArray[i - 1].distance);
     }
     const sun = new THREE.Mesh(geometrySun, planetMaterials[3]);
@@ -179,6 +208,7 @@ function handlePlanets(planets) {
     // *TODO FUTURE WORK - EDIT THESE FUNCTIONS OUT OF GLOBAL SCOPE
     // Update planet size
     const updatePlanetSize = (index) => {
+        console.log(index);
         const size = document.getElementById(`planet-size-${index}`).value;
         console.log(size);
         planets[index].updatePlanetSize(size);
@@ -225,85 +255,6 @@ function handlePlanets(planets) {
     // Add planet control forms
     let planetCountCheck = planetCount;
     planetCount = document.getElementById("planet-count").value;
-    // Has planet count changed?
-    if (planetCountCheck !== planetCount) {
-        const allPlanets = document.querySelectorAll(
-            "#planet-controls-div form"
-        );
-        allPlanets.forEach((p, index) => {
-            p.remove();
-        });
-        let planetDistanceOffsetLower = 4.5;
-        let planetDistanceOffsetUpper = 18;
-        for (let i = 0; i < planetCount; i++) {
-            const form = document.createElement("form");
-            console.log(planetDistanceOffsetLower, planetDistanceOffsetUpper);
-            form.innerHTML = `<label for="planet-size">Planet ${
-                i + 1
-            } Size</label>
-            <input oninput="updatePlanetSize(${i})"
-                type="range"
-                id="planet-size-${i}"
-                name="planet-size"
-                min=".5"
-                max="4"
-                step="0.1"
-                value="${planetsArray[i].size}"
-            />
-            <label for="orbit-speed">Planet ${i + 1} Orbit Speed</label>
-            <input oninput="updatePlanetSpeed(${i})"
-                type="range"
-                id="orbit-speed-${i}"
-                name="orbit-speed"
-                min="1"
-                max="10"
-                step="0.1"
-                value="${planetsArray[i].speed}"
-            />
-            <label for="planet-spin">Planet ${i + 1} Spin Speed</label>
-            <input oninput="updatePlanetSpinSpeed(${i})"
-                type="range"
-                id="planet-spin-${i}"
-                name="planet-spin"
-                min="1"
-                max="12"
-                step="0.1"
-                value="${planetsArray[i].spinSpeed}"
-            />
-            <label for="planet-distance">Planet ${i + 1} Distance</label>
-            <input oninput="updatePlanetDistance(${i})"
-                type="range"
-                id="planet-distance-${i}"
-                name="planet-distance"
-                min="${planetDistanceOffsetLower}"
-                max="${planetDistanceOffsetUpper}"
-                step="0.1"
-                value="${planetsArray[i].distance / 10}"
-            />
-            <label for="planet-texture">Planet ${i + 1} Texture</label>
-            <input onclick="updatePlanetTexture(${i})"
-                type="button"
-                id="planet-texture-${i}"
-                name="planet-texture"
-            />`;
-
-            if (i === 0) {
-                planetDistanceOffsetLower = 0;
-                planetDistanceOffsetLower += 27;
-                planetDistanceOffsetUpper += 27;
-            } else {
-                planetDistanceOffsetLower += 18;
-                planetDistanceOffsetUpper += 18;
-            }
-
-            // Set div to append control forms to
-            const planetSizeDiv = document.getElementById(
-                "planet-controls-div"
-            );
-            planetSizeDiv.appendChild(form);
-        }
-    }
-
     // Add the planets
     for (let i = 0; i < planets.length; i++) {
         if (scene.children.includes(planets[i].mesh)) {
@@ -329,7 +280,7 @@ const arrow = () => {
     const hex = 0xffff00;
     const arrowHelper = new THREE.ArrowHelper(dir, origin, length, hex, 0, 0);
     scene.add(arrowHelper);
-    setTimeout(() => scene.remove(arrowHelper), 5000);
+    setTimeout(() => scene.remove(arrowHelper), 20000);
 };
 
 // Generate random star effect
@@ -359,40 +310,52 @@ function pausePlay() {
         planetsArray[i].lastUpdateTime = Date.now();
     }
     isPaused = !isPaused;
+    if (isPaused) {
+        pauseButton.className = "bi bi-play-btn-fill";
+    } else {
+        pauseButton.className = "bi bi-pause-btn-fill";
+    }
 }
+
 const pauseButton = document.getElementById("pause-button");
 pauseButton.addEventListener("click", pausePlay);
+// Color change on interaction
+pauseButton.addEventListener("mouseover", () => {
+    pauseButton.style.color = "#808080";
+});
+pauseButton.addEventListener("mouseout", () => {
+    pauseButton.style.color = "#ffffff";
+});
+pauseButton.addEventListener("mousedown", () => {
+    pauseButton.style.color = "#444444";
+});
+pauseButton.addEventListener("mouseup", () => {
+    pauseButton.style.color = "#808080";
+});
 
 // Camera Select Test functionality
 let isCameraHelio = true;
 console.log(isCameraHelio);
-function selectCameraFollow() {
-    console.log("Select Camera Follow");
-    if (isCameraHelio) {
-        isCameraHelio = false;
-        console.log(isCameraHelio);
-    } else {
-        isCameraHelio = true;
-        camera.position.set(0, 0, 50);
-        camera.lookAt(0, 0, 0);
-        console.log(isCameraHelio);
-    }
-}
 
-function updateCameraMode() {
+function setToHelioCameraMode() {
+    isCameraHelio = true;
+    camera.position.set(0, 0, 50);
+    camera.lookAt(0, 0, 0);
+    console.log(isCameraHelio);
+}
+const helioButton = document.getElementById("helio-button");
+helioButton.addEventListener("click", setToHelioCameraMode);
+
+function setToPlanetCameraMode() {
     if (!isCameraHelio) {
-        console.log("Camera Follow FUNC");
-        console.log(camera);
-        camera.lookAt(planetsArray[0].mesh.position);
-    }
     for (let p of planetsArray) {
         if (p.cameraFollow) {
+            console.log("Camera following planet");
             camera.lookAt(p.mesh.position);
         }
     }
 }
-const selectButton = document.getElementById("select-button");
-selectButton.addEventListener("click", selectCameraFollow);
+}
 
 // Function to animate the scene/loop
 function animate() {
@@ -419,14 +382,16 @@ function animate() {
             p.mesh.rotation.y += p.spinSpeed;
         });
     }
-    arrow();
+    // arrow();
     sun.rotation.y += 0.0005;
     updateSelectedPlanetColor();
-    requestAnimationFrame(animate);
     controls.update();
-    updateCameraMode();
+    setToPlanetCameraMode();
+    requestAnimationFrame(animate); 
     //camera.lookAt(planetsArray[0].mesh.position);
+    updatePlanetPreviewScene();
     renderer.render(scene, camera);
+
 }
 
 const checkReadyToStart = setInterval(() => {
@@ -479,17 +444,16 @@ function onMouseDown(event) {
         //console.log(intersectedObject.name);
         for (let p of planetsArray) {
             if (p.name === intersectedObject.name) {
-                //console.log(`Selected ${p.name}`);
+                console.log(`Selected ${p.name}`);
+                isCameraHelio = false;
                 p.cameraFollow = true;
+                console.log(isCameraHelio);
                 const index = planetsArray.indexOf(p);
                 showControls(p, index);
-            }
+            } else {
+                p.cameraFollow = false;
+            }          
         }
-    } else {
-        for (let p of planetsArray) {
-            p.cameraFollow = false;
-        }
-        //console.log('No intersections found');
     }
 }
 
@@ -513,11 +477,12 @@ function showControls(planet, i) {
     const offcanvasElement = document.getElementById("offcanvasExample");
     const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
     if (offcanvasElement.lastElementChild.nodeName === "FORM") {
-        offcanvasElement.removeChild(offcanvasElement.lastElementChild);
+        -offcanvasElement.removeChild(offcanvasElement.lastElementChild);
     }
-    const planetHTML = `<label for="planet-size"> ${planet.name} Size</label>
+    const planetHTML = `<label for="planet-size">Mass</label>
             <input oninput="updatePlanetSize(${i})"
                 type="range"
+                class = "form-range"
                 id="planet-size-${i}"
                 name="planet-size"
                 min=".5"
@@ -525,9 +490,10 @@ function showControls(planet, i) {
                 step="0.1"
                 value="${planetsArray[i].size}"
             />
-            <label for="orbit-speed">Planet ${i + 1} Orbit Speed</label>
+            <label for="orbit-speed">Orbit Speed</label>
             <input oninput="updatePlanetSpeed(${i})"
                 type="range"
+                class = "form-range"
                 id="orbit-speed-${i}"
                 name="orbit-speed"
                 min="1"
@@ -535,9 +501,10 @@ function showControls(planet, i) {
                 step="0.1"
                 value="${planetsArray[i].speed}"
             />
-            <label for="planet-spin">Planet ${i + 1} Spin Speed</label>
+            <label for="planet-spin">Spin Speed</label>
             <input oninput="updatePlanetSpinSpeed(${i})"
                 type="range"
+                class = "form-range"
                 id="planet-spin-${i}"
                 name="planet-spin"
                 min="1"
@@ -545,7 +512,18 @@ function showControls(planet, i) {
                 step="0.1"
                 value="${planetsArray[i].spinSpeed}"
             />
-            <label for="planet-texture">Planet ${i + 1} Texture</label>
+            <label for="planet-distance">Distance</label>
+            <input oninput="updatePlanetDistance(${i})"
+                type="range"
+                class = "form-range"
+                id="planet-distance-${i}"
+                name="planet-distance"
+                min="${planet.minmaxdist[0] / 10}"
+                max="${planet.minmaxdist[1] / 10}"
+                step="0.1"
+                value="${planetsArray[i].distance / 10}"
+            />
+            <label for="planet-texture">Texture</label>
             <input onclick="updatePlanetTexture(${i})"
                 type="button"
                 id="planet-texture-${i}"
@@ -557,16 +535,27 @@ function showControls(planet, i) {
     bsOffcanvas.show();
 }
 
-/*
-<label for="planet-distance">Planet ${i + 1} Distance</label>
-<input oninput="updatePlanetDistance(${i})"
-    type="range"
-    id="planet-distance-${i}"
-    name="planet-distance"
-    min="${planetDistanceOffsetLower}"
-    max="${planetDistanceOffsetUpper}"
-    step="0.1"
-    value="${planetsArray[i].distance / 10}"
-/>
-*/
-
+const updatePlanetPreviewScene = () => {
+    // Remove only the planets from the previewScene
+    previewScene.children = previewScene.children.filter((child) => {
+        if (child.isMesh) {
+            previewScene.remove(child);
+            return false;
+        }
+        return true;
+    });
+    let previewPlanet;
+    let selectedPlanet = planetsArray.find((p) => p.cameraFollow);
+    if (selectedPlanet) {
+        selectedPlanet = selectedPlanet.mesh;
+        previewPlanet = selectedPlanet.clone();
+        console.log(previewPlanet);
+    }
+    if (previewPlanet) {
+        previewPlanet.position.set(0, 0, 0);
+        camera2.lookAt(previewPlanet.position);
+        previewScene.add(previewPlanet);
+        console.log(previewScene.children);
+    }
+    littleRenderer.render(previewScene, camera2);
+}

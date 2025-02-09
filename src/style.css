@@ -11,7 +11,7 @@ body {
     width: 100%;
 }
 
-canvas {
+#bg {
     position: fixed;
     top: 0;
     left: 0;
@@ -60,7 +60,19 @@ form {
     top: 0;
     left: 0;
     z-index: 2;
+}
 
+#offcanvas form {
+    padding: 1rem;
+
+}
+
+.offcanvas-body {
+    flex-grow: 0;
+}
+
+#offcanvas offcanvas-end {
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 h5 {
