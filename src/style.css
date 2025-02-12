@@ -11,7 +11,7 @@ body {
     width: 100%;
 }
 
-canvas {
+#bg {
     position: fixed;
     top: 0;
     left: 0;
@@ -53,4 +53,44 @@ form {
     background-color: rgba(0, 0, 0, 0.5);
     font-weight: bold;
     font-size: 1.5em;
+}
+
+#offcanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+#offcanvas form {
+    padding: 1rem;
+}
+
+.offcanvas-body {
+    flex-grow: 0;
+}
+
+#offcanvas offcanvas-end {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+h5 {
+    font-size: 3em;
+    font-weight: bolder;
+    font-family: Bungee Hairline;
+    color: white;
+}
+
+.p-3 {
+}
+
+.container-md {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    border-radius: 10%;
 }
