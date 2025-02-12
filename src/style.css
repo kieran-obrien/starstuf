@@ -82,7 +82,6 @@ h5 {
 }
 
 .p-3 {
-    background-color: blue;
 }
 
 .container-md {
@@ -93,4 +92,5 @@ h5 {
 img {
     width: 100%;
     height: auto;
+    border-radius: 10%;
 }
