@@ -64,7 +64,6 @@ form {
 
 #offcanvas form {
     padding: 1rem;
-
 }
 
 .offcanvas-body {
@@ -80,4 +79,18 @@ h5 {
     font-weight: bolder;
     font-family: Bungee Hairline;
     color: white;
+}
+
+.p-3 {
+    background-color: blue;
+}
+
+.container-md {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+img {
+    width: 100%;
+    height: auto;
 }

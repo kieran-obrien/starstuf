@@ -72,7 +72,7 @@
                     </h5>
                     <button
                         type="button"
-                        class="btn-close"
+                        class="btn-close btn-close-white"
                         data-bs-dismiss="offcanvas"
                         aria-label="Close"
                     ></button>
@@ -81,12 +81,67 @@
                     <div id="planet preview">
                         <canvas id="planet-preview-canvas"></canvas>
                     </div>
+                    <br />
                     <div>
                         Some text as placeholder. In real life you can have the
                         elements you have chosen. Like, text, images, lists,
                         etc.
                     </div>
+                    <br />
                     <div id="planet-controls-div"></div>
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-secondary dropdown-toggle"
+                            type="button"
+                            id="dropdownMenu2"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            Planet Type
+                        </button>
+                        <ul
+                            class="dropdown-menu dropdown-menu-dark"
+                            aria-labelledby="dropdownMenu2"
+                        >
+                            <li class="texture-option">
+                                <button class="dropdown-item" type="button">
+                                    Hospitable
+                                </button>
+                            </li>
+                            <li class="texture-option">
+                                <button class="dropdown-item" type="button">
+                                    Inhospitable
+                                </button>
+                            </li>
+                            <li class="texture-option">
+                                <button class="dropdown-item" type="button">
+                                    Terrestrial
+                                </button>
+                            </li>
+                            <li class="texture-option">
+                                <button class="dropdown-item" type="button">
+                                    Gaseous
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    <br />
+                    <div class="container-md text-center">
+                        <div class="row row-cols-2 row g-2" id="texture-grid">
+                            <div class="col">
+                                <div class="p-3 texture-img"></div>
+                            </div>
+                            <div class="col">
+                                <div class="p-3 texture-img"></div>
+                            </div>
+                            <div class="col">
+                                <div class="p-3 texture-img"></div>
+                            </div>
+                            <div class="col">
+                                <div class="p-3 texture-img"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

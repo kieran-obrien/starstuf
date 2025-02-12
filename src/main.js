@@ -2,7 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { MapControls } from "three/addons/controls/MapControls.js";
-import { select } from "three/tsl";
+import { select, texture } from "three/tsl";
 
 let readyToStart = false;
 
@@ -43,7 +43,6 @@ console.log(canvas.clientWidth, canvas.clientHeight);
 littleRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
 littleRenderer.setPixelRatio(window.devicePixelRatio);
 
-
 // Set the renderer size and camera position
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -76,6 +75,7 @@ const gridHelper = new THREE.GridHelper(200, 50);
 previewScene.add(lightHelper, gridHelper);
 
 // RAYCASTER
+const imgLoader = new THREE.ImageLoader();
 
 // Load the planet textures
 const textureLoader = new THREE.TextureLoader();
@@ -85,14 +85,65 @@ const planetTextures = [];
 let planetsArray = [];
 let planetMaterials = [];
 let sun;
+
+class TextureObj {
+    constructor(path) {
+        this.pathNum = path;
+
+        this.type = this.init(Number(this.pathNum));
+    }
+
+    init(pathNum) {
+        const gaseous = [1, 2, 3, 4]; // Gaseous planets
+        const hospitable = [5, 6, 7, 8]; // Hospitable planets
+        const inhospitable = [9, 10, 11, 12]; // Inhospitable planets
+        const terrestrial = [13, 14, 15, 16]; // Terrestrial planets
+
+        if (gaseous.includes(pathNum)) {
+            this.name = `Gaseous ${pathNum}`;
+            return "Gaseous";
+        } else if (hospitable.includes(pathNum)) {
+            this.name = `Hospitable ${pathNum}`;
+            return "Hospitable";
+        } else if (inhospitable.includes(pathNum)) {
+            this.name = `Inhospitable ${pathNum}`;
+            return "Inhospitable";
+        } else if (terrestrial.includes(pathNum)) {
+            this.name = `Terrestrial ${pathNum}`;
+            return "Terrestrial";
+        }
+    }
+}
+
+const imgs = [];
+
+const loadImages = (path) => {
+    imgLoader.load(
+        path,
+        (image) => {
+            // On successful load
+            console.log(image);
+            imgs.push(image);
+        },
+        undefined,
+        (err) => {
+            // On error (e.g., texture not found)
+            console.log("Finished loading images");
+        }
+    );
+};
+
 const loadTexture = (counter) => {
-    const texturePath = `./texture${counter}.jpg`;
+    const texturePath = `./textures/${counter}.png`;
 
     textureLoader.load(
         texturePath,
         (texture) => {
             // On successful load
-            planetTextures.push(texture);
+            loadImages(texturePath);
+            const pathNum = texturePath.split("/")[2].split(".")[0];
+            const textureObj = new TextureObj(pathNum);
+            planetTextures.push([texture, textureObj]);
             loadTexture(counter + 1); // Load the next texture
         },
         undefined,
@@ -100,6 +151,7 @@ const loadTexture = (counter) => {
             // On error (e.g., texture not found)
             console.log("Finished loading textures");
             console.log(planetTextures);
+            console.log(imgs);
             [planetsArray, planetMaterials, sun] = createPlanets(); // Create planets after loading all textures
         }
     );
@@ -107,11 +159,6 @@ const loadTexture = (counter) => {
 
 // Start loading textures
 loadTexture(textureCounter);
-const checkTexturesLoaded = setInterval(() => {
-    if (readyToStart) {
-        clearInterval(checkTexturesLoaded);
-    }
-}, 100);
 
 // Set planet class
 class Planet {
@@ -131,9 +178,9 @@ class Planet {
         this.cameraFollow = false;
     }
     updatePlanetSize(size) {
-        console.log("Are we here?");
         this.size = size;
         this.mesh.scale.set(size, size, size);
+        console.log(`Updated planet size: ${this.size}`);
     }
     updatePlanetSpeed(speed) {
         console.log(this.speed);
@@ -154,7 +201,7 @@ class Planet {
 
 function getPlanet() {
     let planetMaterialInit = new THREE.MeshPhongMaterial({
-        map: planetTextures[0],
+        map: planetTextures[0][0],
     });
     return new Planet(
         1,
@@ -168,8 +215,9 @@ function createPlanets() {
     planetMaterials = Array(planetTextures.length)
         .fill()
         .map(() => {
+            console.log(planetTextures[materialCounter][0]);
             let material = new THREE.MeshPhongMaterial({
-                map: planetTextures[materialCounter],
+                map: planetTextures[materialCounter][0],
             });
             materialCounter++;
             return material;
@@ -187,7 +235,9 @@ function createPlanets() {
         ];
         console.log(planetsArray[i - 1].distance);
     }
+    console.log(planetMaterials[3]);
     const sun = new THREE.Mesh(geometrySun, planetMaterials[3]);
+    console.log(sun, "HELLO");
 
     // Add the initial sun
     scene.add(sun);
@@ -198,9 +248,6 @@ function createPlanets() {
     console.log(planetsArray);
     return [planetsArray, planetMaterials, sun];
 }
-
-// console.log(planetsArray);
-// console.log(planetsArray[0]);
 
 // Add planet functionality
 let planetCount = 0;
@@ -319,7 +366,7 @@ function pausePlay() {
 
 const pauseButton = document.getElementById("pause-button");
 pauseButton.addEventListener("click", pausePlay);
-// Color change on interaction
+
 pauseButton.addEventListener("mouseover", () => {
     pauseButton.style.color = "#808080";
 });
@@ -335,8 +382,6 @@ pauseButton.addEventListener("mouseup", () => {
 
 // Camera Select Test functionality
 let isCameraHelio = true;
-console.log(isCameraHelio);
-
 function setToHelioCameraMode() {
     isCameraHelio = true;
     camera.position.set(0, 0, 50);
@@ -348,13 +393,13 @@ helioButton.addEventListener("click", setToHelioCameraMode);
 
 function setToPlanetCameraMode() {
     if (!isCameraHelio) {
-    for (let p of planetsArray) {
-        if (p.cameraFollow) {
-            console.log("Camera following planet");
-            camera.lookAt(p.mesh.position);
+        for (let p of planetsArray) {
+            if (p.cameraFollow) {
+                console.log("Camera following planet");
+                camera.lookAt(p.mesh.position);
+            }
         }
     }
-}
 }
 
 // Function to animate the scene/loop
@@ -382,16 +427,13 @@ function animate() {
             p.mesh.rotation.y += p.spinSpeed;
         });
     }
-    // arrow();
     sun.rotation.y += 0.0005;
     updateSelectedPlanetColor();
     controls.update();
     setToPlanetCameraMode();
-    requestAnimationFrame(animate); 
-    //camera.lookAt(planetsArray[0].mesh.position);
+    requestAnimationFrame(animate);
     updatePlanetPreviewScene();
     renderer.render(scene, camera);
-
 }
 
 const checkReadyToStart = setInterval(() => {
@@ -452,7 +494,7 @@ function onMouseDown(event) {
                 showControls(p, index);
             } else {
                 p.cameraFollow = false;
-            }          
+            }
         }
     }
 }
@@ -536,6 +578,8 @@ function showControls(planet, i) {
 }
 
 const updatePlanetPreviewScene = () => {
+    //! Lets try to minimise the amount of work done here
+    //! We only want to update the preview scene when a new planet is selected
     // Remove only the planets from the previewScene
     previewScene.children = previewScene.children.filter((child) => {
         if (child.isMesh) {
@@ -549,13 +593,57 @@ const updatePlanetPreviewScene = () => {
     if (selectedPlanet) {
         selectedPlanet = selectedPlanet.mesh;
         previewPlanet = selectedPlanet.clone();
-        console.log(previewPlanet);
     }
     if (previewPlanet) {
         previewPlanet.position.set(0, 0, 0);
+        previewPlanet.scale.set(1.2, 1.2, 1.2);
         camera2.lookAt(previewPlanet.position);
         previewScene.add(previewPlanet);
-        console.log(previewScene.children);
     }
     littleRenderer.render(previewScene, camera2);
+};
+
+// Planet control texture menu functionality
+let textureOptions = document.querySelectorAll(".texture-option");
+textureOptions = Array.from(textureOptions).map((option) =>
+    option.querySelector("button")
+);
+
+console.log(textureOptions);
+
+const setTextureGrid = (event) => {
+    const selectedTexture = event.target.innerText;
+    const textureGrid = document.querySelector(".row.row-cols-2.row.g-2");
+    textureGrid.id = selectedTexture.toLowerCase(); // Set the id to the selected texture
+    updateTextureControls();
+};
+
+for (let group of textureOptions) {
+    group.addEventListener("click", setTextureGrid);
 }
+
+const updateTextureControls = () => {
+    const textureGrid = document.querySelector(".row.row-cols-2.row.g-2");
+    const textureOptions = document.querySelectorAll(".texture-img");
+    console.log(textureOptions);
+    switch (textureGrid.id) {
+        case "gaseous":
+            for (let i = 0; i < textureOptions.length; i++) {
+                if (textureOptions[i].hasChildNodes()) {
+                    textureOptions[i].removeChild(textureOptions[i].firstChild);
+                }
+
+                const img = document.createElement("img");
+                textureOptions[i].appendChild(img);
+                img.src = imgs[i].src;
+            }
+        case "hospitable":
+            break;
+        case "inhospitable":
+            break;
+        case "terrestrial":
+            break;
+        default:
+            break;
+    }
+};
