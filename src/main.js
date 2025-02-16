@@ -133,6 +133,8 @@ const loadImages = (path) => {
     );
 };
 
+// Load the textures/imgs
+let imgsLoaded = false;
 const loadTexture = (counter) => {
     const texturePath = `./textures/${counter}.png`;
 
@@ -152,6 +154,7 @@ const loadTexture = (counter) => {
             console.log("Finished loading textures");
             console.log(planetTextures);
             console.log(imgs);
+            imgsLoaded = true;
             [planetsArray, planetMaterials, sun] = createPlanets(); // Create planets after loading all textures
         }
     );
@@ -164,18 +167,27 @@ loadTexture(textureCounter);
 class Planet {
     constructor(size, orbitSpeed, mesh) {
         this.size = size;
+        // Initial distance from sun
         this.distance = 90;
-        this.minmaxdist = [0, 0]; // Values for min and max distance range input
+        // Values for min and max distance range calc
+        this.minmaxdist = [0, 0];
         this.speed = orbitSpeed;
         this.spinSpeed = 0.00125;
         this.mesh = mesh;
+        // Not in use atm
         this.inOrbit = false;
         this.name = "";
-        this.textureCode = 0;
+        // For texture code, retreive the last character of the texture path from mesh material
+        this.textureCode = 5; //too fancy   //this.mesh.material.map.source.data.currentSrc.split(".png")[0].slice(-1);
         this.currentAngle = 0;
+        // For pause functionality
         this.lastUpdateTime = Date.now();
-        this.selected = false;
+        // For raycasting
+        this.raySelected = false;
+        // For camera follow
         this.cameraFollow = false;
+        // For controls selection
+        this.controlsSelected = false;
     }
     updatePlanetSize(size) {
         this.size = size;
@@ -201,7 +213,7 @@ class Planet {
 
 function getPlanet() {
     let planetMaterialInit = new THREE.MeshPhongMaterial({
-        map: planetTextures[0][0],
+        map: planetTextures[4][0],
     });
     return new Planet(
         1,
@@ -269,19 +281,6 @@ function handlePlanets(planets) {
     };
     window.updatePlanetSpeed = updatePlanetSpeed;
 
-    // Update planet texture
-    const updatePlanetTexture = (index) => {
-        planets[index].textureCode++;
-        let nextTexture = planets[index].textureCode;
-        if (nextTexture >= planetMaterials.length) {
-            nextTexture = 0;
-            planets[index].textureCode = 0;
-        }
-        planets[index].mesh.material = planetMaterials[nextTexture];
-        planetMaterials[nextTexture].map.needsUpdate = true;
-    };
-    window.updatePlanetTexture = updatePlanetTexture;
-
     // Update planet spin speed
     const updatePlanetSpinSpeed = (index) => {
         const spin = document.getElementById(`planet-spin-${index}`).value;
@@ -314,6 +313,18 @@ function handlePlanets(planets) {
         }
     }
 }
+
+// Update planet texture
+const updatePlanetTexture = (index) => {
+    for (let p of planetsArray) {
+        if (p.controlsSelected) {
+            p.mesh.material = planetMaterials[index];
+            p.textureCode = index + 1;
+            planetMaterials[index].map.needsUpdate = true;
+            console.log(`Updated planet texture: ${p.textureCode}`);
+        }
+    }
+};
 
 // Arrow orbit effect
 const arrow = () => {
@@ -461,12 +472,12 @@ function onMouseMove(event) {
         for (let p of planetsArray) {
             if (p.name === intersectedObject.name) {
                 //console.log(`Selected ${p.name}`);
-                p.selected = true;
+                p.raySelected = true;
             }
         }
     } else {
         for (let p of planetsArray) {
-            p.selected = false;
+            p.raySelected = false;
         }
         //console.log('No intersections found');
     }
@@ -491,8 +502,10 @@ function onMouseDown(event) {
                 p.cameraFollow = true;
                 console.log(isCameraHelio);
                 const index = planetsArray.indexOf(p);
+                p.controlsSelected = true;
                 showControls(p, index);
             } else {
+                p.controlsSelected = false;
                 p.cameraFollow = false;
             }
         }
@@ -503,7 +516,7 @@ function updateSelectedPlanetColor() {
     const rColor = new THREE.Color(0xff0000);
     if (planetsArray) {
         for (let p of planetsArray) {
-            if (p.selected) {
+            if (p.raySelected) {
                 p.mesh.material.color = rColor;
             } else {
                 p.mesh.material.color = new THREE.Color(0xffffff);
@@ -514,6 +527,7 @@ function updateSelectedPlanetColor() {
 
 function showControls(planet, i) {
     console.log(planet);
+    updateTextureControls(planet.textureCode);
     const header = document.getElementById("offcanvasExampleLabel");
     header.innerHTML = `${planet.name} Controls`;
     const offcanvasElement = document.getElementById("offcanvasExample");
@@ -564,12 +578,6 @@ function showControls(planet, i) {
                 max="${planet.minmaxdist[1] / 10}"
                 step="0.1"
                 value="${planetsArray[i].distance / 10}"
-            />
-            <label for="planet-texture">Texture</label>
-            <input onclick="updatePlanetTexture(${i})"
-                type="button"
-                id="planet-texture-${i}"
-                name="planet-texture"
             />`;
     const form = document.createElement("form");
     form.innerHTML = planetHTML;
@@ -579,7 +587,7 @@ function showControls(planet, i) {
 
 const updatePlanetPreviewScene = () => {
     //! Lets try to minimise the amount of work done here
-    //! We only want to update the preview scene when a new planet is selected
+    //! We only want to update the preview scene when a new planet is raySelected
     // Remove only the planets from the previewScene
     previewScene.children = previewScene.children.filter((child) => {
         if (child.isMesh) {
@@ -609,12 +617,33 @@ textureOptions = Array.from(textureOptions).map((option) =>
     option.querySelector("button")
 );
 
-console.log(textureOptions);
+// Init texture menu with initial "hospitable" value
+const checkImgsLoaded = setInterval(() => {
+    if (imgsLoaded) {
+        initImgTextureMenu();
+        clearInterval(checkImgsLoaded);
+        imgsLoaded = false; // Done with this now
+    }
+}, 100);
+
+const initImgTextureMenu = () => {
+    const textureOptions = document.querySelectorAll(".texture-img");
+    for (let i = 0; i < textureOptions.length; i++) {
+        if (textureOptions[i].hasChildNodes()) {
+            textureOptions[i].removeChild(textureOptions[i].firstChild);
+        }
+        console.log("onit");
+        const img = document.createElement("img");
+        textureOptions[i].appendChild(img);
+        img.src = imgs[i + 4].src;
+    }
+};
 
 const setTextureGrid = (event) => {
     const selectedTexture = event.target.innerText;
     const textureGrid = document.querySelector(".row.row-cols-2.row.g-2");
-    textureGrid.id = selectedTexture.toLowerCase(); // Set the id to the selected texture
+    textureGrid.id = selectedTexture.toLowerCase(); // Set the id to the raySelected texture
+    console.log(textureGrid.id);
     updateTextureControls();
 };
 
@@ -622,10 +651,22 @@ for (let group of textureOptions) {
     group.addEventListener("click", setTextureGrid);
 }
 
-const updateTextureControls = () => {
+const updateTextureControls = (textureCode) => {
     const textureGrid = document.querySelector(".row.row-cols-2.row.g-2");
     const textureOptions = document.querySelectorAll(".texture-img");
-    console.log(textureOptions);
+    // Update texture menu to reflect current texture of raySelected planet, upon selection
+    if (textureCode) {
+        if (textureCode >= 1 && textureCode <= 4) {
+            textureGrid.id = "gaseous";
+        } else if (textureCode >= 5 && textureCode <= 8) {
+            textureGrid.id = "hospitable";
+        } else if (textureCode >= 9 && textureCode <= 12) {
+            textureGrid.id = "inhospitable";
+        } else if (textureCode >= 13 && textureCode <= 16) {
+            textureGrid.id = "terrestrial";
+        }
+    }
+    // Update the texture options based on the raySelected texture grid
     switch (textureGrid.id) {
         case "gaseous":
             for (let i = 0; i < textureOptions.length; i++) {
@@ -637,13 +678,68 @@ const updateTextureControls = () => {
                 textureOptions[i].appendChild(img);
                 img.src = imgs[i].src;
             }
+            break;
         case "hospitable":
+            for (let i = 0; i < textureOptions.length; i++) {
+                if (textureOptions[i].hasChildNodes()) {
+                    textureOptions[i].removeChild(textureOptions[i].firstChild);
+                }
+
+                const img = document.createElement("img");
+                textureOptions[i].appendChild(img);
+                img.src = imgs[i + 4].src;
+            }
             break;
         case "inhospitable":
+            for (let i = 0; i < textureOptions.length; i++) {
+                if (textureOptions[i].hasChildNodes()) {
+                    textureOptions[i].removeChild(textureOptions[i].firstChild);
+                }
+
+                const img = document.createElement("img");
+                textureOptions[i].appendChild(img);
+                img.src = imgs[i + 8].src;
+            }
             break;
         case "terrestrial":
+            for (let i = 0; i < textureOptions.length; i++) {
+                if (textureOptions[i].hasChildNodes()) {
+                    textureOptions[i].removeChild(textureOptions[i].firstChild);
+                }
+
+                const img = document.createElement("img");
+                textureOptions[i].appendChild(img);
+                img.src = imgs[i + 12].src;
+            }
             break;
         default:
             break;
     }
 };
+
+// Selecting texture for planet
+const textureImgOptions = document.querySelectorAll(".texture-img-select");
+console.log(textureImgOptions);
+textureImgOptions.forEach((option) => {
+    option.addEventListener("mouseover", () => {
+        option.style.backgroundColor = "#303030";
+    });
+    option.addEventListener("mouseout", () => {
+        option.style.backgroundColor =
+            "RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1))";
+    });
+    option.addEventListener("mousedown", () => {
+        option.style.backgroundColor = "#1e1e1e";
+        let imgIndex = option.firstElementChild.src
+            .split("/")
+            .pop()
+            .split(".")[0];
+        console.log(imgIndex);
+        updatePlanetTexture(imgIndex - 1);
+    });
+    option.addEventListener("mouseup", () => {
+        option.style.backgroundColor = "#303030";
+    });
+});
+
+//! BOTH ORBIT AND SPIN SPEEDS RANGE INPUTS ARE SPAWNING IN AT 0 WHEN RESELECTING A PLANET

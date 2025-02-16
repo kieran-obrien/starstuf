@@ -89,8 +89,23 @@ h5 {
     padding-right: 0;
 }
 
-img {
+img,
+.texture-img-select {
     width: 100%;
     height: auto;
     border-radius: 10%;
+}
+
+.texture-img-select {
+    background-color: RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1));
+}
+
+#planet-preview {
+    display: flex;
+    justify-content: center;
+}
+
+#planet-preview canvas {
+    height: 100%;
+    width: 100%;
 }
