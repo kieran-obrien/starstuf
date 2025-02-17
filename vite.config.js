@@ -1,3 +1,3 @@
 export default {
-    base: "/threejstut1/",
+    base: "/helio/",
 };
