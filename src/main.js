@@ -4,6 +4,13 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { MapControls } from "three/addons/controls/MapControls.js";
 import { select, texture } from "three/tsl";
 
+const tooltipTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="tooltip"]'
+);
+const tooltipList = [...tooltipTriggerList].map(
+    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+);
+
 let readyToStart = false;
 
 // Set up the scene, camera, and renderer
@@ -133,6 +140,7 @@ const loadImages = (path) => {
     );
 };
 
+let sunMaterial;
 // Load the textures/imgs
 let imgsLoaded = false;
 const loadTexture = (counter) => {
@@ -151,6 +159,9 @@ const loadTexture = (counter) => {
         undefined,
         (err) => {
             // On error (e.g., texture not found)
+            // Load sun texture, create sun material
+            const sunTexture = textureLoader.load("./sun.jpg");
+            sunMaterial = new THREE.MeshPhongMaterial({ map: sunTexture });
             console.log("Finished loading textures");
             console.log(planetTextures);
             console.log(imgs);
@@ -248,7 +259,7 @@ function createPlanets() {
         console.log(planetsArray[i - 1].distance);
     }
     console.log(planetMaterials[3]);
-    const sun = new THREE.Mesh(geometrySun, planetMaterials[3]);
+    const sun = new THREE.Mesh(geometrySun, sunMaterial);
     console.log(sun, "HELLO");
 
     // Add the initial sun
@@ -529,11 +540,12 @@ function showControls(planet, i) {
     console.log(planet);
     updateTextureControls(planet.textureCode);
     const header = document.getElementById("offcanvasExampleLabel");
-    header.innerHTML = `${planet.name} Controls`;
+    header.innerHTML = `${planet.name}`;
     const offcanvasElement = document.getElementById("offcanvasExample");
     const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
-    if (offcanvasElement.lastElementChild.nodeName === "FORM") {
-        -offcanvasElement.removeChild(offcanvasElement.lastElementChild);
+    const offCanvasBody = document.getElementById("offcanvas-body");
+    if (offCanvasBody.lastElementChild.nodeName === "FORM") {
+        offCanvasBody.removeChild(offcanvasBody.lastElementChild);
     }
     const planetHTML = `<label for="planet-size">Mass</label>
             <input oninput="updatePlanetSize(${i})"
@@ -555,7 +567,7 @@ function showControls(planet, i) {
                 min="1"
                 max="10"
                 step="0.1"
-                value="${planetsArray[i].speed}"
+                value="${planetsArray[i].speed * 8000}"
             />
             <label for="planet-spin">Spin Speed</label>
             <input oninput="updatePlanetSpinSpeed(${i})"
@@ -566,7 +578,7 @@ function showControls(planet, i) {
                 min="1"
                 max="12"
                 step="0.1"
-                value="${planetsArray[i].spinSpeed}"
+                value="${planetsArray[i].spinSpeed * 800}"
             />
             <label for="planet-distance">Distance</label>
             <input oninput="updatePlanetDistance(${i})"
@@ -581,7 +593,7 @@ function showControls(planet, i) {
             />`;
     const form = document.createElement("form");
     form.innerHTML = planetHTML;
-    offcanvasElement.appendChild(form);
+    offCanvasBody.appendChild(form);
     bsOffcanvas.show();
 }
 
@@ -742,4 +754,12 @@ textureImgOptions.forEach((option) => {
     });
 });
 
-//! BOTH ORBIT AND SPIN SPEEDS RANGE INPUTS ARE SPAWNING IN AT 0 WHEN RESELECTING A PLANET
+const nameInput = document.getElementById("planet-name-input");
+nameInput.addEventListener("input", () => {
+    const offCanvasTitle = document.getElementById("offcanvasExampleLabel");
+    if (nameInput.value === "") {
+        offCanvasTitle.innerHTML = "Planet";
+        return;
+    }
+    offCanvasTitle.innerHTML = nameInput.value;
+});

@@ -77,15 +77,30 @@
                         aria-label="Close"
                     ></button>
                 </div>
-                <div class="offcanvas-body">
+                <div class="offcanvas-body" id="offcanvas-body">
                     <div id="planet-preview">
                         <canvas id="planet-preview-canvas"></canvas>
                     </div>
                     <br />
+
                     <div>
-                        Some text as placeholder. In real life you can have the
-                        elements you have chosen. Like, text, images, lists,
-                        etc.
+                        <input
+                            class="form-control text-bg-dark"
+                            type="text"
+                            placeholder="Planet Name"
+                            maxlength="20"
+                            id="planet-name-input"
+                        />
+                        <div class="form-text">Max 20 characters</div>
+                        <br />
+                        <textarea
+                            class="form-control text-bg-dark"
+                            type="text"
+                            placeholder="Describe this planet..."
+                            rows="5"
+                            maxlength="500"
+                        ></textarea>
+                        <div class="form-text">Max 500 characters</div>
                     </div>
                     <br />
                     <div id="planet-controls-div"></div>
@@ -99,6 +114,7 @@
                         >
                             Planet Type
                         </button>
+                        <br />
                         <ul
                             class="dropdown-menu dropdown-menu-dark"
                             aria-labelledby="dropdownMenu2"

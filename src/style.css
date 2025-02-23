@@ -109,3 +109,24 @@ img,
     height: 100%;
     width: 100%;
 }
+
+.form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */ 
+            color: white;
+            opacity: 1; /* Firefox */
+}
+
+.form-control {
+    border: 0;
+}
+
+form {
+    font-weight: bold;
+}
+
+textarea {
+    resize: none;
+}
+
+.form-text {
+    color: rgb(175, 175, 175);
+}
