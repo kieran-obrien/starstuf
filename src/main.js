@@ -3,13 +3,19 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { MapControls } from "three/addons/controls/MapControls.js";
 import { select, texture } from "three/tsl";
+import stars from "./stars.js";
+import lightingSetup from "./lighting-setup.js";
 
+//? ADD TOOLIPS IN FUTURE?
+/*
 const tooltipTriggerList = document.querySelectorAll(
     '[data-bs-toggle="tooltip"]'
 );
 const tooltipList = [...tooltipTriggerList].map(
     (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
 );
+*/
+//?
 
 let readyToStart = false;
 
@@ -22,8 +28,6 @@ const camera = new THREE.PerspectiveCamera(
     0.1,
     1000
 ); // field of view, aspect ratio, near, far
-
-camera.layers.enable(1);
 
 const renderer = new THREE.WebGLRenderer({
     // Create the renderer
@@ -64,24 +68,18 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.03;
 controls.enablePan = false;
 
+const [ambientLight, ambientLight2, lightHelper, gridHelper] = lightingSetup(
+    scene,
+    previewScene
+); 
+
 // Setting intial geometry and material for the sun and planets
 const geometrySun = new THREE.SphereGeometry(10, 32, 32);
 const materialSun = new THREE.MeshStandardMaterial({ color: 0xffaa0d });
 const material = new THREE.MeshStandardMaterial({ color: 0x006600 });
 const geometryPlanet = new THREE.SphereGeometry(4, 15, 15);
 
-// Add lighting to the scene
-const pointLight = new THREE.PointLight(0xffffff, 1000, 1000);
-pointLight.position.set(5, 20, 5);
-const ambientLight = new THREE.AmbientLight(0xffffff);
-const ambientLight2 = new THREE.AmbientLight(0xffffff);
-scene.add(ambientLight);
-previewScene.add(ambientLight2);
-const lightHelper = new THREE.PointLightHelper(pointLight);
-const gridHelper = new THREE.GridHelper(200, 50);
-previewScene.add(lightHelper, gridHelper);
-
-// RAYCASTER
+// Init THREE imgloader
 const imgLoader = new THREE.ImageLoader();
 
 // Load the planet textures
@@ -352,24 +350,8 @@ const arrow = () => {
     setTimeout(() => scene.remove(arrowHelper), 20000);
 };
 
-// Generate random star effect
-function stars() {
-    // Define the star geometry and material once
-    const geometryStar = new THREE.SphereGeometry(0.8, 24, 24);
-    const materialStar = new THREE.MeshStandardMaterial({ color: 0xffffff });
-    const generateStars = () => {
-        // Nested function for generating stars
-        const star = new THREE.Mesh(geometryStar, materialStar);
-        star.layers.set(1);
-        const [x, y, z] = Array(3)
-            .fill()
-            .map(() => THREE.MathUtils.randFloatSpread(2000));
-        star.position.set(x, y, z);
-        scene.add(star);
-    };
-    Array(1000).fill().forEach(generateStars); // Set star amount
-}
-stars();
+// Generate stars for background scene
+stars(scene, camera);
 
 // Pause and play functionality
 let isPaused = false;
@@ -545,7 +527,7 @@ function showControls(planet, i) {
     const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
     const offCanvasBody = document.getElementById("offcanvas-body");
     if (offCanvasBody.lastElementChild.nodeName === "FORM") {
-        offCanvasBody.removeChild(offcanvasBody.lastElementChild);
+        offCanvasBody.removeChild(offCanvasBody.lastElementChild);
     }
     const planetHTML = `<label for="planet-size">Mass</label>
             <input oninput="updatePlanetSize(${i})"
