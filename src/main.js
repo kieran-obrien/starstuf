@@ -5,20 +5,12 @@ import { MapControls } from "three/addons/controls/MapControls.js";
 import { select, texture } from "three/tsl";
 import stars from "./stars.js";
 import lightingSetup from "./lighting-setup.js";
-import { pausePlay, getPauseButton } from "./pause.js";
+import { getPauseButton } from "./controls/pause-controls.js";
 import { raycasterInit, updateRaycastSelectPlanetColor } from "./raycaster.js";
+import { isSetToPlanetCameraMode } from "./controls/camera-controls.js";
 //import planetControlsHTML from "./planet-controls-html.js"
 
-//? ADD TOOLIPS IN FUTURE?
-/*
-const tooltipTriggerList = document.querySelectorAll(
-    '[data-bs-toggle="tooltip"]'
-);
-const tooltipList = [...tooltipTriggerList].map(
-    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
-);
-*/
-//?
+//? Add bootstrap tootips in future?
 
 let readyToStart = false; //? Is this how we implement a loading screen too?
 
@@ -355,17 +347,6 @@ function setToHelioCameraMode() {
 const helioButton = document.getElementById("helio-button");
 helioButton.addEventListener("click", setToHelioCameraMode);
 
-function setToPlanetCameraMode() {
-    if (!isCameraHelio) {
-        for (let p of planetsArray) {
-            if (p.cameraFollow) {
-                console.log("Camera following planet");
-                camera.lookAt(p.mesh.position);
-            }
-        }
-    }
-}
-
 // Function to animate the scene/loop
 function animate() {
     // arrow(); // Arrow orbit effect
@@ -394,7 +375,7 @@ function animate() {
     sun.rotation.y += 0.0005;
     updateRaycastSelectPlanetColor();
     controls.update();
-    setToPlanetCameraMode();
+    isSetToPlanetCameraMode();
     requestAnimationFrame(animate);
     updatePlanetPreviewScene();
     renderer.render(scene, camera);

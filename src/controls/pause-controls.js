@@ -1,4 +1,4 @@
-import { planetsArray, isPaused, setPaused } from "./main.js";
+import { planetsArray, isPaused, setPaused } from "../main.js";
 
 const pausePlay = () => {
     for (let i = 0; i < planetsArray.length; i++) {
