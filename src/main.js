@@ -6,6 +6,8 @@ import { select, texture } from "three/tsl";
 import stars from "./stars.js";
 import lightingSetup from "./lighting-setup.js";
 import { pausePlay, getPauseButton } from "./pause.js";
+import { raycasterInit, updateRaycastSelectPlanetColor } from "./raycaster.js";
+//import planetControlsHTML from "./planet-controls-html.js"
 
 //? ADD TOOLIPS IN FUTURE?
 /*
@@ -18,7 +20,7 @@ const tooltipList = [...tooltipTriggerList].map(
 */
 //?
 
-let readyToStart = false;
+let readyToStart = false; //? Is this how we implement a loading screen too?
 
 // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
@@ -337,15 +339,18 @@ let isPaused = false;
 const setPaused = (value) => {
     isPaused = value;
 };
-getPauseButton();  
+getPauseButton();
 
 // Camera Select Test functionality
 let isCameraHelio = true;
+const setIsCameraHelio = (value) => {
+    isCameraHelio = value;
+};
+raycasterInit();
 function setToHelioCameraMode() {
     isCameraHelio = true;
     camera.position.set(0, 0, 50);
     camera.lookAt(0, 0, 0);
-    console.log(isCameraHelio);
 }
 const helioButton = document.getElementById("helio-button");
 helioButton.addEventListener("click", setToHelioCameraMode);
@@ -387,7 +392,7 @@ function animate() {
         });
     }
     sun.rotation.y += 0.0005;
-    updateSelectedPlanetColor();
+    updateRaycastSelectPlanetColor();
     controls.update();
     setToPlanetCameraMode();
     requestAnimationFrame(animate);
@@ -402,77 +407,6 @@ const checkReadyToStart = setInterval(() => {
     }
 }, 100);
 
-const raycaster = new THREE.Raycaster();
-
-document.addEventListener("mousemove", onMouseMove);
-function onMouseMove(event) {
-    //console.log('Mouse Down Event');
-    const mouseCoords = new THREE.Vector2(
-        (event.clientX / renderer.domElement.clientWidth) * 2 - 1,
-        -(event.clientY / renderer.domElement.clientHeight) * 2 + 1
-    );
-    raycaster.setFromCamera(mouseCoords, camera);
-    const intersects = raycaster.intersectObjects(scene.children, true);
-    if (intersects.length > 0) {
-        //console.log(intersects);
-        const intersectedObject = intersects[0].object;
-        //console.log(intersectedObject.name);
-        for (let p of planetsArray) {
-            if (p.name === intersectedObject.name) {
-                //console.log(`Selected ${p.name}`);
-                p.raySelected = true;
-            }
-        }
-    } else {
-        for (let p of planetsArray) {
-            p.raySelected = false;
-        }
-        //console.log('No intersections found');
-    }
-}
-
-document.addEventListener("mousedown", onMouseDown);
-function onMouseDown(event) {
-    const mouseCoords = new THREE.Vector2(
-        (event.clientX / renderer.domElement.clientWidth) * 2 - 1,
-        -(event.clientY / renderer.domElement.clientHeight) * 2 + 1
-    );
-    raycaster.setFromCamera(mouseCoords, camera);
-    const intersects = raycaster.intersectObjects(scene.children, true);
-    if (intersects.length > 0) {
-        //console.log(intersects);
-        const intersectedObject = intersects[0].object;
-        //console.log(intersectedObject.name);
-        for (let p of planetsArray) {
-            if (p.name === intersectedObject.name) {
-                console.log(`Selected ${p.name}`);
-                isCameraHelio = false;
-                p.cameraFollow = true;
-                console.log(isCameraHelio);
-                const index = planetsArray.indexOf(p);
-                p.controlsSelected = true;
-                showControls(p, index);
-            } else {
-                p.controlsSelected = false;
-                p.cameraFollow = false;
-            }
-        }
-    }
-}
-
-function updateSelectedPlanetColor() {
-    const rColor = new THREE.Color(0xff0000);
-    if (planetsArray) {
-        for (let p of planetsArray) {
-            if (p.raySelected) {
-                p.mesh.material.color = rColor;
-            } else {
-                p.mesh.material.color = new THREE.Color(0xffffff);
-            }
-        }
-    }
-}
-
 function showControls(planet, i) {
     console.log(planet);
     updateTextureControls(planet.textureCode);
@@ -484,7 +418,7 @@ function showControls(planet, i) {
     if (offCanvasBody.lastElementChild.nodeName === "FORM") {
         offCanvasBody.removeChild(offCanvasBody.lastElementChild);
     }
-    const planetHTML = `<label for="planet-size">Mass</label>
+    const planetControlsHTML = `<label for="planet-size">Mass</label>
             <input oninput="updatePlanetSize(${i})"
                 type="range"
                 class = "form-range"
@@ -529,7 +463,7 @@ function showControls(planet, i) {
                 value="${planetsArray[i].distance / 10}"
             />`;
     const form = document.createElement("form");
-    form.innerHTML = planetHTML;
+    form.innerHTML = planetControlsHTML;
     offCanvasBody.appendChild(form);
     bsOffcanvas.show();
 }
@@ -696,3 +630,4 @@ nameInput.addEventListener("input", () => {
 });
 
 export { planetsArray, isPaused, setPaused };
+export { scene, camera, renderer, isCameraHelio, setIsCameraHelio, showControls };
