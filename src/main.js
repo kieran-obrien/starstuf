@@ -5,6 +5,7 @@ import { MapControls } from "three/addons/controls/MapControls.js";
 import { select, texture } from "three/tsl";
 import stars from "./stars.js";
 import lightingSetup from "./lighting-setup.js";
+import { pausePlay, getPauseButton } from "./pause.js";
 
 //? ADD TOOLIPS IN FUTURE?
 /*
@@ -22,12 +23,7 @@ let readyToStart = false;
 // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
 const previewScene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-); // field of view, aspect ratio, near, far
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // field of view, aspect ratio, near, far
 
 const renderer = new THREE.WebGLRenderer({
     // Create the renderer
@@ -44,12 +40,7 @@ renderer.setPixelRatio(window.devicePixelRatio);
 
 // Set the renderer size to match the canvas size
 const canvas = document.querySelector("#planet-preview-canvas");
-const camera2 = new THREE.PerspectiveCamera(
-    75,
-    canvas.clientWidth / canvas.clientHeight,
-    0.1,
-    1000
-); // field of view, aspect ratio, near, far
+const camera2 = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000); // field of view, aspect ratio, near, far
 console.log(canvas.clientWidth, canvas.clientHeight);
 littleRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
 littleRenderer.setPixelRatio(window.devicePixelRatio);
@@ -68,10 +59,7 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.03;
 controls.enablePan = false;
 
-const [ambientLight, ambientLight2, lightHelper, gridHelper] = lightingSetup(
-    scene,
-    previewScene
-); 
+const [ambientLight, ambientLight2, lightHelper, gridHelper] = lightingSetup(scene, previewScene);
 
 // Setting intial geometry and material for the sun and planets
 const geometrySun = new THREE.SphereGeometry(10, 32, 32);
@@ -224,11 +212,7 @@ function getPlanet() {
     let planetMaterialInit = new THREE.MeshPhongMaterial({
         map: planetTextures[4][0],
     });
-    return new Planet(
-        1,
-        0.000125,
-        new THREE.Mesh(geometryPlanet, planetMaterialInit)
-    );
+    return new Planet(1, 0.000125, new THREE.Mesh(geometryPlanet, planetMaterialInit));
 }
 
 function createPlanets() {
@@ -250,10 +234,7 @@ function createPlanets() {
         planetsArray[i - 1].name = `Planet ${i}`;
         planetsArray[i - 1].distance = distanceFromLast;
         distanceFromLast += 180;
-        planetsArray[i - 1].minmaxdist = [
-            distanceFromLast - 270,
-            distanceFromLast - 90,
-        ];
+        planetsArray[i - 1].minmaxdist = [distanceFromLast - 270, distanceFromLast - 90];
         console.log(planetsArray[i - 1].distance);
     }
     console.log(planetMaterials[3]);
@@ -299,9 +280,7 @@ function handlePlanets(planets) {
 
     // Update planet distance
     const updatePlanetDistance = (index) => {
-        const distance = document.getElementById(
-            `planet-distance-${index}`
-        ).value;
+        const distance = document.getElementById(`planet-distance-${index}`).value;
         planets[index].updatePlanetDistance(distance);
     };
     window.updatePlanetDistance = updatePlanetDistance;
@@ -355,34 +334,10 @@ stars(scene, camera);
 
 // Pause and play functionality
 let isPaused = false;
-function pausePlay() {
-    for (let i = 0; i < planetsArray.length; i++) {
-        // Update the last update time for each planet
-        planetsArray[i].lastUpdateTime = Date.now();
-    }
-    isPaused = !isPaused;
-    if (isPaused) {
-        pauseButton.className = "bi bi-play-btn-fill";
-    } else {
-        pauseButton.className = "bi bi-pause-btn-fill";
-    }
-}
-
-const pauseButton = document.getElementById("pause-button");
-pauseButton.addEventListener("click", pausePlay);
-
-pauseButton.addEventListener("mouseover", () => {
-    pauseButton.style.color = "#808080";
-});
-pauseButton.addEventListener("mouseout", () => {
-    pauseButton.style.color = "#ffffff";
-});
-pauseButton.addEventListener("mousedown", () => {
-    pauseButton.style.color = "#444444";
-});
-pauseButton.addEventListener("mouseup", () => {
-    pauseButton.style.color = "#808080";
-});
+const setPaused = (value) => {
+    isPaused = value;
+};
+getPauseButton();  
 
 // Camera Select Test functionality
 let isCameraHelio = true;
@@ -607,9 +562,7 @@ const updatePlanetPreviewScene = () => {
 
 // Planet control texture menu functionality
 let textureOptions = document.querySelectorAll(".texture-option");
-textureOptions = Array.from(textureOptions).map((option) =>
-    option.querySelector("button")
-);
+textureOptions = Array.from(textureOptions).map((option) => option.querySelector("button"));
 
 // Init texture menu with initial "hospitable" value
 const checkImgsLoaded = setInterval(() => {
@@ -719,15 +672,11 @@ textureImgOptions.forEach((option) => {
         option.style.backgroundColor = "#303030";
     });
     option.addEventListener("mouseout", () => {
-        option.style.backgroundColor =
-            "RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1))";
+        option.style.backgroundColor = "RGBA(var(--bs-dark-rgb), var(--bs-bg-opacity, 1))";
     });
     option.addEventListener("mousedown", () => {
         option.style.backgroundColor = "#1e1e1e";
-        let imgIndex = option.firstElementChild.src
-            .split("/")
-            .pop()
-            .split(".")[0];
+        let imgIndex = option.firstElementChild.src.split("/").pop().split(".")[0];
         console.log(imgIndex);
         updatePlanetTexture(imgIndex - 1);
     });
@@ -745,3 +694,5 @@ nameInput.addEventListener("input", () => {
     }
     offCanvasTitle.innerHTML = nameInput.value;
 });
+
+export { planetsArray, isPaused, setPaused };
