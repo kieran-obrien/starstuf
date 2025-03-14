@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { MapControls } from "three/addons/controls/MapControls.js";
 import { select, texture } from "three/tsl";
-import stars from "./stars.js";
+import { stars } from "./stars.js";
 import lightingSetup from "./lighting-setup.js";
 import { getPauseButton } from "./controls/pause-controls.js";
 import { raycasterInit, updateRaycastSelectPlanetColor } from "./raycaster.js";
@@ -347,10 +347,13 @@ function setToHelioCameraMode() {
 const helioButton = document.getElementById("helio-button");
 helioButton.addEventListener("click", setToHelioCameraMode);
 
-// Function to animate the scene/loop
+/*Main function to animate each frame
+ Called recursively so constantly invoking any function called in a frame
+*/
 function animate() {
     // arrow(); // Arrow orbit effect
     handlePlanets(planetsArray); // Handle planet controls
+    //! Lets move this to pause functionality
     if (!isPaused) {
         // If not paused, update the planets
         const currentTime = Date.now();
@@ -611,4 +614,4 @@ nameInput.addEventListener("input", () => {
 });
 
 export { planetsArray, isPaused, setPaused };
-export { scene, camera, renderer, isCameraHelio, setIsCameraHelio, showControls };
+export { scene, previewScene, camera, renderer, isCameraHelio, setIsCameraHelio, showControls };
