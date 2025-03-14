@@ -6,7 +6,6 @@ export default function lightingSetup(scene, previewScene) {
     const pointLightPosition = [5, 20, 5];
     pointLight.position.set(...pointLightPosition);
     const ambientLight = new THREE.AmbientLight(0xffffff);
-    console.log(ambientLight)
     const ambientLight2 = new THREE.AmbientLight(0xffffff);
     scene.add(ambientLight);
     previewScene.add(ambientLight2);
