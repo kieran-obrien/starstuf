@@ -1,57 +1,23 @@
 import "./style.css";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { MapControls } from "three/addons/controls/MapControls.js";
-import { select, texture } from "three/tsl";
 import { stars } from "./stars.js";
 import lightingSetup from "./lighting-setup.js";
 import { getPauseButton } from "./controls/pause-controls.js";
 import { raycasterInit, updateRaycastSelectPlanetColor } from "./raycaster.js";
-import { isSetToPlanetCameraMode } from "./controls/camera-controls.js";
+import { initCameraControls, isSetToPlanetCameraMode } from "./controls/camera-controls.js";
+import { updatePlanetOrbitPosition } from "./planets.js";
+import { initThreeJsAssets } from "./three-setup.js";
 //import planetControlsHTML from "./planet-controls-html.js"
 
 //? Add bootstrap tootips in future?
 
 let readyToStart = false; //? Is this how we implement a loading screen too?
 
-// Set up the scene, camera, and renderer
-const scene = new THREE.Scene();
-const previewScene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // field of view, aspect ratio, near, far
+// Init threejs assets
+const [scene, previewScene, camera, camera2, renderer, previewRenderer] = initThreeJsAssets();
 
-const renderer = new THREE.WebGLRenderer({
-    // Create the renderer
-    canvas: document.querySelector("#bg"),
-});
-
-const littleRenderer = new THREE.WebGLRenderer({
-    // Create the renderer
-    canvas: document.querySelector("#planet-preview-canvas"),
-});
-// Set the renderer size to match the canvas size
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio);
-
-// Set the renderer size to match the canvas size
-const canvas = document.querySelector("#planet-preview-canvas");
-const camera2 = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000); // field of view, aspect ratio, near, far
-console.log(canvas.clientWidth, canvas.clientHeight);
-littleRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
-littleRenderer.setPixelRatio(window.devicePixelRatio);
-
-// Set the renderer size and camera position
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.setZ(50);
-camera2.position.setZ(10);
-renderer.render(scene, camera);
-
-// Add orbit controls
-// const controls = new OrbitControls(camera, renderer.domElement);
-const controls = new MapControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.03;
-controls.enablePan = false;
+// Init camera controls
+const controls = initCameraControls();
 
 const [ambientLight, ambientLight2, lightHelper, gridHelper] = lightingSetup(scene, previewScene);
 
@@ -333,12 +299,12 @@ const setPaused = (value) => {
 };
 getPauseButton();
 
-// Camera Select Test functionality
+// Camera Focus Functionality
 let isCameraHelio = true;
 const setIsCameraHelio = (value) => {
     isCameraHelio = value;
 };
-raycasterInit();
+
 function setToHelioCameraMode() {
     isCameraHelio = true;
     camera.position.set(0, 0, 50);
@@ -347,34 +313,15 @@ function setToHelioCameraMode() {
 const helioButton = document.getElementById("helio-button");
 helioButton.addEventListener("click", setToHelioCameraMode);
 
+raycasterInit();
+
 /*Main function to animate each frame
  Called recursively so constantly invoking any function called in a frame
 */
 function animate() {
     // arrow(); // Arrow orbit effect
     handlePlanets(planetsArray); // Handle planet controls
-    //! Lets move this to pause functionality
-    if (!isPaused) {
-        // If not paused, update the planets
-        const currentTime = Date.now();
-        let distanceCounter = 0;
-        planetsArray.forEach((p) => {
-            // Calculate the change in angle based on the speed and elapsed time
-            const deltaAngle = (currentTime - p.lastUpdateTime) * p.speed;
-            p.currentAngle += deltaAngle;
-            p.lastUpdateTime = currentTime;
-
-            // Set the new position based on the current angle
-            p.mesh.position.set(
-                Math.cos(p.currentAngle) * (p.distance + distanceCounter),
-                0,
-                Math.sin(p.currentAngle) * (p.distance + distanceCounter)
-            );
-            distanceCounter += 90;
-            // Rotate the planet
-            p.mesh.rotation.y += p.spinSpeed;
-        });
-    }
+    if (!isPaused) updatePlanetOrbitPosition(planetsArray);
     sun.rotation.y += 0.0005;
     updateRaycastSelectPlanetColor();
     controls.update();
@@ -475,7 +422,7 @@ const updatePlanetPreviewScene = () => {
         camera2.lookAt(previewPlanet.position);
         previewScene.add(previewPlanet);
     }
-    littleRenderer.render(previewScene, camera2);
+    previewRenderer.render(previewScene, camera2);
 };
 
 // Planet control texture menu functionality
@@ -613,5 +560,7 @@ nameInput.addEventListener("input", () => {
     offCanvasTitle.innerHTML = nameInput.value;
 });
 
-export { planetsArray, isPaused, setPaused };
-export { scene, previewScene, camera, renderer, isCameraHelio, setIsCameraHelio, showControls };
+export { planetsArray };
+export { isPaused, setPaused };
+export { scene, previewScene, camera, renderer, showControls };
+export { isCameraHelio, setIsCameraHelio };
