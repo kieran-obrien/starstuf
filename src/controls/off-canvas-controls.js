@@ -1,3 +1,5 @@
+import { planetsArray, planetMaterials } from "../main";
+
 function updatePlanetControlsHTML(i, planetsArray) {
   return `<label for="planet-size">Mass</label>
             <input oninput="updatePlanetSize(${i})"
@@ -38,11 +40,19 @@ function updatePlanetControlsHTML(i, planetsArray) {
                 class = "form-range"
                 id="planet-distance-${i}"
                 name="planet-distance"
-                min="${planet.minmaxdist[0] / 10}"
-                max="${planet.minmaxdist[1] / 10}"
+                min="${planetsArray[i].minmaxdist[0] / 10}"
+                max="${planetsArray[i].minmaxdist[1] / 10}"
                 step="0.1"
                 value="${planetsArray[i].distance / 10}"
             />`;
 }
 
-export default updatePlanetControlsHTML;
+const updatePlanetTexture = (index) => {
+  const p = planetsArray.find((planet) => planet.controlsSelected);
+  p.mesh.material = planetMaterials[index];
+  p.textureCode = index + 1;
+  planetMaterials[index].map.needsUpdate = true;
+  console.log(`Updated planet texture: ${p.textureCode}`);
+};
+
+export { updatePlanetControlsHTML, updatePlanetTexture };

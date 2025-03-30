@@ -11,7 +11,10 @@ import {
 import { updatePlanetOrbitPosition, getPlanetGeometries } from "./planets.js";
 import { initThreeJsAssets } from "./three-setup.js";
 //import planetControlsHTML from "./planet-controls-html.js"
-import updatePlanetControlsHTML from "./controls/off-canvas-controls.js";
+import {
+  updatePlanetControlsHTML,
+  updatePlanetTexture,
+} from "./controls/off-canvas-controls.js";
 
 // The two main classes for Helio
 import TextureObj from "./classes/TextureObj.js";
@@ -193,15 +196,6 @@ function handlePlanets(planets) {
     }
   }
 }
-
-// Update planet texture
-const updatePlanetTexture = (index) => {
-  const p = planetsArray.find((planet) => planet.controlsSelected);
-  p.mesh.material = planetMaterials[index];
-  p.textureCode = index + 1;
-  planetMaterials[index].map.needsUpdate = true;
-  console.log(`Updated planet texture: ${p.textureCode}`);
-};
 
 // Arrow orbit effect
 const arrow = () => {
@@ -432,7 +426,7 @@ nameInput.addEventListener("input", () => {
   offCanvasTitle.innerHTML = currentControlPlanet.name;
 });
 
-export { planetsArray };
+export { planetsArray, planetMaterials };
 export { isPaused, setPaused };
 export { scene, previewScene, camera, renderer, showControls };
 export { isCameraHelio, setIsCameraHelio };
