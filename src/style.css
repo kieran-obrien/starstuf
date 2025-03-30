@@ -19,7 +19,8 @@ body {
 }
 .container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     height: 100vh;
     width: 100vw;
     background-color: black;
@@ -30,14 +31,15 @@ body {
     display: flex;
     justify-content: center;
     z-index: 1;
-    height: 100px;
+    height: 65px;
 }
 
 h1 {
     font-size: 4em;
+    font-weight: 600;
     align-items: end;
     font-family: Bungee Hairline;
-    height: 100px;
+    height: 65px;
 }
 h1,
 form {
@@ -45,14 +47,22 @@ form {
 }
 
 #user-interface {
-    position: fixed;
-    top: 0;
-    left: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    /*position: fixed;
+    /*top: 0;
+    /*left: 0;*/
     z-index: 1;
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.5);
     font-weight: bold;
     font-size: 1.5em;
+}
+
+#main-buttons-div {
+    display: flex;
 }
 
 #offcanvas {
@@ -126,4 +136,10 @@ textarea {
 
 .form-text {
     color: rgb(175, 175, 175);
+}
+
+.icon {
+    margin: 20px;
+    font-size: 2em;
+    font-weight: lighter;
 }

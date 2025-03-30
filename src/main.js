@@ -20,7 +20,10 @@ import {
 import TextureObj from "./classes/TextureObj.js";
 import Planet from "./classes/Planet.js";
 
-import { loadThreeJsTextures } from "./texture-img-loader.js";
+import {
+  loadThreeJsTextures,
+  initImgTextureMenu,
+} from "./texture-img-loader.js";
 
 // ! STRUCTURE ! //   // ! STRUCTURE ! //   // ! STRUCTURE ! //
 // Init threejs assets
@@ -54,9 +57,9 @@ raycasterInit();
 // Load the planet textures and images for selection menu
 let textureCounter = 1;
 let planetTextures = [];
-let imgs = [];
+let planetImages = [];
 await loadTextures(); // Call the async function
-initImgTextureMenu(); // Init texture select menu to "hospitable" imgs
+initImgTextureMenu(planetImages); // Init texture select menu to "hospitable" planetImages
 
 // Initial planets and other threejs objects
 let planetsArray = [];
@@ -76,17 +79,17 @@ animate();
 
 async function loadTextures() {
   // Await the resolved promise
-  [planetTextures, imgs] = await loadThreeJsTextures(
+  [planetTextures, planetImages] = await loadThreeJsTextures(
     textureCounter,
     planetTextures,
     imgLoader,
     textureLoader,
-    imgs
+    planetImages
   );
   console.log(
-    "TextureTHREEjs and Texture HTML imgs arrays:",
+    "TextureTHREEjs and Texture HTML planetImages arrays:",
     planetTextures,
-    imgs
+    planetImages
   );
 }
 
@@ -136,6 +139,7 @@ async function createPlanets() {
   const sunTexture = textureLoader.load("./sun.jpg");
   sunMaterial = new THREE.MeshPhongMaterial({ map: sunTexture });
   const sun = new THREE.Mesh(geometrySun, sunMaterial);
+  sun.name = "sun";
   console.log(sun, "HELLO");
 
   // Add the initial sun
@@ -228,7 +232,7 @@ const setIsCameraHelio = (value) => {
 
 function setToHelioCameraMode() {
   isCameraHelio = true;
-  camera.position.set(0, 0, 50);
+  camera.position.set(0, 0, 150);
   camera.lookAt(0, 0, 0);
 }
 const helioButton = document.getElementById("helio-button");
@@ -272,9 +276,6 @@ function showControls(planet, i) {
 }
 
 function updatePlanetPreviewScene() {
-  //! Lets try to minimise the amount of work done here
-  //! We only want to update the preview scene when a new planet is raySelected
-  // Remove only the planets from the previewScene
   previewScene.children = previewScene.children.filter((child) => {
     if (child.isMesh) {
       previewScene.remove(child);
@@ -285,6 +286,7 @@ function updatePlanetPreviewScene() {
   let previewPlanet;
   let selectedPlanet = planetsArray.find((p) => p.controlsSelected);
   if (selectedPlanet) {
+    // Clone the mesh
     previewPlanet = selectedPlanet.mesh.clone();
   }
   if (previewPlanet) {
@@ -301,19 +303,6 @@ let textureOptions = document.querySelectorAll(".texture-option");
 textureOptions = Array.from(textureOptions).map((option) =>
   option.querySelector("button")
 );
-
-// Init texture menu with initial "hospitable" value
-function initImgTextureMenu() {
-  const textureOptions = document.querySelectorAll(".texture-img");
-  for (let i = 0; i < textureOptions.length; i++) {
-    if (textureOptions[i].hasChildNodes()) {
-      textureOptions[i].removeChild(textureOptions[i].firstChild);
-    }
-    const img = document.createElement("img");
-    textureOptions[i].appendChild(img);
-    img.src = imgs[i + 4].src;
-  }
-}
 
 const setTextureGrid = (event) => {
   const selectedTexture = event.target.innerText;
@@ -352,7 +341,7 @@ const updateTextureControls = (textureCode) => {
 
         const img = document.createElement("img");
         textureOptions[i].appendChild(img);
-        img.src = imgs[i].src;
+        img.src = planetImages[i].src;
       }
       break;
     case "hospitable":
@@ -363,7 +352,7 @@ const updateTextureControls = (textureCode) => {
 
         const img = document.createElement("img");
         textureOptions[i].appendChild(img);
-        img.src = imgs[i + 4].src;
+        img.src = planetImages[i + 4].src;
       }
       break;
     case "inhospitable":
@@ -374,7 +363,7 @@ const updateTextureControls = (textureCode) => {
 
         const img = document.createElement("img");
         textureOptions[i].appendChild(img);
-        img.src = imgs[i + 8].src;
+        img.src = planetImages[i + 8].src;
       }
       break;
     case "terrestrial":
@@ -385,7 +374,7 @@ const updateTextureControls = (textureCode) => {
 
         const img = document.createElement("img");
         textureOptions[i].appendChild(img);
-        img.src = imgs[i + 12].src;
+        img.src = planetImages[i + 12].src;
       }
       break;
     default:

@@ -8,6 +8,7 @@ import {
   setIsCameraHelio,
   showControls,
 } from "./main";
+import { hideControls } from "./controls/off-canvas-controls";
 
 const raycaster = new THREE.Raycaster();
 
@@ -45,6 +46,7 @@ const raycasterInit = () => {
     raycaster.setFromCamera(mouseCoords, camera);
     const intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0) {
+      console.log(intersects);
       const intersectedObject = intersects[0].object;
       for (let p of planetsArray) {
         if (p.uuid === intersectedObject.uuid) {
@@ -59,6 +61,7 @@ const raycasterInit = () => {
           p.cameraFollow = false;
         }
       }
+      if (intersectedObject.name === "sun") hideControls(); // When sun clicked, close offcanvas
     }
   }
 };

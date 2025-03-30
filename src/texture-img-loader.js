@@ -1,14 +1,13 @@
-//import { imgLoader, textureLoader } from "./main";
 import TextureObj from "./classes/TextureObj";
 
-// Load the textures/imgs
-let imgsLoaded = false;
+// Load the textures/planetImages
+let planetImagesLoaded = false;
 const loadThreeJsTextures = (
   counter,
   planetTextures,
   imgLoader,
   textureLoader,
-  imgs
+  planetImages
 ) => {
   return new Promise((resolve, reject) => {
     const texturePath = `./textures/${counter}.png`;
@@ -17,7 +16,7 @@ const loadThreeJsTextures = (
       (texture) => {
         // On successful load
         //console.log("Texture loaded successfully:", texturePath);
-        loadTextureImages(texturePath, imgLoader, imgs); // Images for selection menu
+        loadTextureImages(texturePath, imgLoader, planetImages); // Images for selection menu
         const pathNum = texturePath.split("/")[2].split(".")[0];
         const textureObj = new TextureObj(pathNum); // Obj for selection menu
         planetTextures.push([texture, textureObj]);
@@ -28,7 +27,7 @@ const loadThreeJsTextures = (
           planetTextures,
           imgLoader,
           textureLoader,
-          imgs
+          planetImages
         )
           .then(resolve) // Resolve when all textures are loaded
           .catch(reject); // Reject if an error occurs
@@ -37,18 +36,18 @@ const loadThreeJsTextures = (
       (err) => {
         // On error (e.g., texture not found, no more to load)
         console.log("Textures and images loaded, continue.")
-        resolve([planetTextures, imgs]); // Resolve with the final state
+        resolve([planetTextures, planetImages]); // Resolve with the final state
       }
     );
   });
 };
 
-const loadTextureImages = (path, imgLoader, imgs) => {
+const loadTextureImages = (path, imgLoader, planetImages) => {
   imgLoader.load(
     path,
     (image) => {
       // On successful load
-      imgs.push(image);
+      planetImages.push(image);
     },
     undefined, // On progress, not needed
     (err) => {
@@ -58,4 +57,17 @@ const loadTextureImages = (path, imgLoader, imgs) => {
   );
 };
 
-export { loadThreeJsTextures };
+// Init texture menu with initial "hospitable" value
+function initImgTextureMenu(planetImages) {
+  const textureOptions = document.querySelectorAll(".texture-img");
+  for (let i = 0; i < textureOptions.length; i++) {
+    if (textureOptions[i].hasChildNodes()) {
+      textureOptions[i].removeChild(textureOptions[i].firstChild);
+    }
+    const img = document.createElement("img");
+    textureOptions[i].appendChild(img);
+    img.src = planetImages[i + 4].src;
+  }
+}
+
+export { loadThreeJsTextures, initImgTextureMenu };

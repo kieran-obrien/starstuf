@@ -1,144 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/svg+xml" href="/icon.png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Bungee+Hairline&display=swap" rel="stylesheet" />
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-        />
-        <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-            crossorigin="anonymous"
-        />
-        <link rel="stylesheet" href="/src/styles.css" />
-        <title>helio</title>
-    </head>
-    <body>
-        <div class="container">
-            <div class="container-h1">
-                <h1>Helio</h1>
-            </div>
-            <div id="user-interface">
-                <div id="planet-count-form">
-                    <form>
-                        <label for="planet-count">Planet Count</label>
-                        <input type="range" id="planet-count" name="planet-count" min="0" max="10" value="1" />
-                    </form>
-                </div>
-                <div id="planet-controls-div"></div>
-                <div id="pause-button-div">
-                    <i id="pause-button" class="bi bi-pause-btn-fill" style="font-size: 2rem; color: white"></i>
-                </div>
-                <div id="helio-button-div">
-                    <button id="helio-button">Make Camera Helio</button>
-                </div>
-            </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee+Hairline&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <title>helio</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="container-h1">
+        <h1>Helio</h1>
+      </div>
+      <div id="user-interface">
+        <div id="planet-count-form">
+          <form>
+            <label for="planet-count">Planets</label>
+            <input
+              type="range"
+              id="planet-count"
+              name="planet-count"
+              min="0"
+              max="10"
+              value="1"
+            />
+          </form>
         </div>
-        <canvas id="bg"></canvas>
-        <div id="offcanvas">
-            <div
-                class="offcanvas offcanvas-end text-bg-dark"
-                style="--bs-bg-opacity: 0.7"
-                data-bs-scroll="true"
-                data-bs-backdrop="false"
-                tabindex="-1"
-                id="offcanvasExample"
-                aria-labelledby="offcanvasExampleLabel"
-            >
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasTitle">Helio</h5>
-                    <button
-                        type="button"
-                        class="btn-close btn-close-white"
-                        data-bs-dismiss="offcanvas"
-                        aria-label="Close"
-                    ></button>
-                </div>
-                <div class="offcanvas-body" id="offcanvas-body">
-                    <div id="planet-preview">
-                        <canvas id="planet-preview-canvas"></canvas>
-                    </div>
-                    <br />
+        <div id="main-buttons-div">
+          <div id="pause-button-div">
+            <i class="ri-pause-large-line icon"></i>
+          </div>
+          <div id="helio-button-div">
+            <i class="ri-sun-fill icon"></i>
+            <!-- Filled Sun -->
+            <i class="ri-camera-switch-line icon"></i>
+            <!--<button id="helio-button">Helio</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <canvas id="bg"></canvas>
+    <div id="offcanvas">
+      <div
+        class="offcanvas offcanvas-end text-bg-dark"
+        style="--bs-bg-opacity: 0.7"
+        data-bs-scroll="true"
+        data-bs-backdrop="false"
+        tabindex="-1"
+        id="offcanvasExample"
+        aria-labelledby="offcanvasExampleLabel"
+      >
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="offcanvasTitle">Helio</h5>
+          <button
+            type="button"
+            class="btn-close btn-close-white"
+            data-bs-dismiss="offcanvas"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="offcanvas-body" id="offcanvas-body">
+          <div id="planet-preview">
+            <canvas id="planet-preview-canvas"></canvas>
+          </div>
+          <br />
 
-                    <div>
-                        <input
-                            class="form-control text-bg-dark"
-                            type="text"
-                            placeholder="Planet Name"
-                            maxlength="20"
-                            id="planet-name-input"
-                        />
-                        <div class="form-text">Max 20 characters</div>
-                        <br />
-                        <textarea
-                            class="form-control text-bg-dark"
-                            type="text"
-                            placeholder="Describe this planet..."
-                            rows="5"
-                            maxlength="500"
-                        ></textarea>
-                        <div class="form-text">Max 500 characters</div>
-                    </div>
-                    <br />
-                    <div id="planet-controls-div"></div>
-                    <div class="dropdown">
-                        <button
-                            class="btn btn-secondary dropdown-toggle"
-                            type="button"
-                            id="dropdownMenu2"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            Planet Type
-                        </button>
-                        <br />
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenu2">
-                            <li class="texture-option">
-                                <button class="dropdown-item" type="button">Hospitable</button>
-                            </li>
-                            <li class="texture-option">
-                                <button class="dropdown-item" type="button">Inhospitable</button>
-                            </li>
-                            <li class="texture-option">
-                                <button class="dropdown-item" type="button">Terrestrial</button>
-                            </li>
-                            <li class="texture-option">
-                                <button class="dropdown-item" type="button">Gaseous</button>
-                            </li>
-                        </ul>
-                    </div>
-                    <br />
-                    <div class="container-md text-center">
-                        <div class="row row-cols-2 row g-2" id="hospitabl">
-                            <div class="col">
-                                <div class="p-3 texture-img texture-img-select"></div>
-                            </div>
-                            <div class="col">
-                                <div class="p-3 texture-img texture-img-select"></div>
-                            </div>
-                            <div class="col">
-                                <div class="p-3 texture-img texture-img-select"></div>
-                            </div>
-                            <div class="col">
-                                <div class="p-3 texture-img texture-img-select"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <div>
+            <input
+              class="form-control text-bg-dark"
+              type="text"
+              placeholder="Planet Name"
+              maxlength="20"
+              id="planet-name-input"
+            />
+            <div class="form-text">Max 20 characters</div>
+            <br />
+            <textarea
+              class="form-control text-bg-dark"
+              type="text"
+              placeholder="Describe this planet..."
+              rows="5"
+              maxlength="500"
+            ></textarea>
+            <div class="form-text">Max 500 characters</div>
+          </div>
+          <br />
+          <div id="planet-controls-div"></div>
+          <div class="dropdown">
+            <button
+              class="btn btn-secondary dropdown-toggle"
+              type="button"
+              id="dropdownMenu2"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              Planet Type
+            </button>
+            <br />
+            <ul
+              class="dropdown-menu dropdown-menu-dark"
+              aria-labelledby="dropdownMenu2"
+            >
+              <li class="texture-option">
+                <button class="dropdown-item" type="button">Hospitable</button>
+              </li>
+              <li class="texture-option">
+                <button class="dropdown-item" type="button">
+                  Inhospitable
+                </button>
+              </li>
+              <li class="texture-option">
+                <button class="dropdown-item" type="button">Terrestrial</button>
+              </li>
+              <li class="texture-option">
+                <button class="dropdown-item" type="button">Gaseous</button>
+              </li>
+            </ul>
+          </div>
+          <br />
+          <div class="container-md text-center">
+            <div class="row row-cols-2 row g-2" id="hospitabl">
+              <div class="col">
+                <div class="p-3 texture-img texture-img-select"></div>
+              </div>
+              <div class="col">
+                <div class="p-3 texture-img texture-img-select"></div>
+              </div>
+              <div class="col">
+                <div class="p-3 texture-img texture-img-select"></div>
+              </div>
+              <div class="col">
+                <div class="p-3 texture-img texture-img-select"></div>
+              </div>
             </div>
+          </div>
         </div>
-        <script
-            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-            crossorigin="anonymous"
-        ></script>
-        <script defer type="module" src="/src/main.js"></script>
-    </body>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script defer type="module" src="/src/main.js"></script>
+  </body>
 </html>

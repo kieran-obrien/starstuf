@@ -55,4 +55,13 @@ const updatePlanetTexture = (index) => {
   console.log(`Updated planet texture: ${p.textureCode}`);
 };
 
-export { updatePlanetControlsHTML, updatePlanetTexture };
+const hideControls = () => {
+  console.log("Attempting to hide offcanvas");
+const offcanvasElement = document.getElementById("offcanvasExample");
+if (offcanvasElement) {
+    const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement) || new bootstrap.Offcanvas(offcanvasElement);
+    bsOffcanvas.hide();
+}
+};
+
+export { updatePlanetControlsHTML, updatePlanetTexture, hideControls };
