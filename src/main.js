@@ -271,13 +271,12 @@ raycasterInit();
 function animate() {
   // arrow(); // Arrow orbit effect
   handlePlanets(planetsArray); // Handle planet controls
-  if (!isPaused) updatePlanetOrbitPosition(planetsArray);
-  sun.rotation.y += 0.0005;
+  if (!isPaused) updatePlanetOrbitPosition(planetsArray, sun);
   updateRaycastSelectPlanetColor();
   controls.update();
   isSetToPlanetCameraMode();
-  requestAnimationFrame(animate);
   updatePlanetPreviewScene();
+  requestAnimationFrame(animate);
   renderer.render(scene, camera);
 }
 
