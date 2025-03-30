@@ -16,6 +16,8 @@ import { initThreeJsAssets } from "./three-setup.js";
 import TextureObj from "./classes/TextureObj.js";
 import Planet from "./classes/Planet.js";
 
+import { loadThreeJsTextures } from "./texture-img-loader.js";
+
 //? Add bootstrap tootips in future?
 
 let readyToStart = false; //? Is this how we implement a loading screen too?
@@ -47,73 +49,55 @@ const geometryPlanet = new THREE.SphereGeometry(4, 15, 15);
 
 // Load the planet textures
 let textureCounter = 1;
-const planetTextures = [];
+let planetTextures = [];
 
 let planetsArray = [];
 let planetMaterials = [];
 let sun;
 
-const imgs = [];
+let imgs = [];
 
 let sunMaterial;
+
 // Load the textures/imgs
-let imgsLoaded = false;
-const loadThreeJsTextures = (counter) => {
-  const texturePath = `./textures/${counter}.png`;
+let imgsTexturesLoaded = false;
 
-  textureLoader.load(
-    texturePath,
-    (texture) => {
-      // On successful load
-      loadTextureImages(texturePath); // Images for selection menu
-      const pathNum = texturePath.split("/")[2].split(".")[0];
-      const textureObj = new TextureObj(pathNum); // Obj for selection menu
-      planetTextures.push([texture, textureObj]);
-      loadThreeJsTextures(counter + 1); // Load the next texture
-    },
-    undefined, // On progress, not needed
-    (err) => {
-      // On error (e.g., texture not found, no more to load)
-      // Sun texture/material init here, to expand in future
-      const sunTexture = textureLoader.load("./sun.jpg");
-      sunMaterial = new THREE.MeshPhongMaterial({ map: sunTexture });
-      imgsLoaded = true; // Flag to start planet init etc.
-    }
+async function loadTextures() {
+  // Await the resolved promise
+  [imgsTexturesLoaded, planetTextures, imgs] = await loadThreeJsTextures(
+    textureCounter,
+    planetTextures,
+    imgLoader,
+    textureLoader,
+    imgs
   );
-};
-
-const loadTextureImages = (path) => {
-  imgLoader.load(
-    path,
-    (image) => {
-      // On successful load
-      imgs.push(image);
-    },
-    undefined, // On progress, not needed
-    (err) => {
-      // On error (e.g., img not found, no more to load)
-      console.log("Finished loading images");
-    }
+  console.log("Textures Loaded:", imgsTexturesLoaded);
+  console.log(
+    "TextureTHREEjs and Texture HTML imgs arrays:",
+    planetTextures,
+    imgs
   );
-};
+}
 
-// Start loading textures
-loadThreeJsTextures(textureCounter);
+// Call the async function
+loadTextures();
 
+
+// ! WILL CHANGE TO ASYNC
 const checkImgsAndTexturesLoaded = setInterval(() => {
   // Need to be finished loading before planet init
-  if (imgsLoaded) {
+  if (imgsTexturesLoaded) {
     initImgTextureMenu(); // Init texture select menu to "hospitable" imgs
     [planetsArray, planetMaterials, sun] = createPlanets(); // Create planets after loading all textures
     clearInterval(checkImgsAndTexturesLoaded);
-    imgsLoaded = false; // Done with flag
+    imgsTexturesLoaded = false; // Done with flag
   }
 }, 100);
 
 // Create and populate array of ten planet objects
 // Also create array of planet materials
 
-function getPlanet() {
+function initPlanetMesh() {
   let planetMaterialInit = new THREE.MeshPhongMaterial({
     map: planetTextures[4][0],
   });
@@ -124,19 +108,20 @@ function getPlanet() {
   );
 }
 
-function createPlanets() {
-  let materialCounter = 0;
-  planetMaterials = Array(planetTextures.length)
+const initPlanetMaterials = (counter, texturesArray) => {
+  return Array(texturesArray.length)
     .fill()
     .map(() => {
-      //console.log(planetTextures[materialCounter][0]);
       let material = new THREE.MeshPhongMaterial({
-        map: planetTextures[materialCounter][0],
+        map: texturesArray[counter][0],
       });
-      materialCounter++;
+      counter++;
       return material;
     });
-  const planetsArray = Array(10).fill().map(getPlanet);
+};
+function createPlanets() {
+  planetMaterials = initPlanetMaterials(0, planetTextures); // For texture select menu
+  const planetsArray = Array(10).fill().map(initPlanetMesh);
   let distanceFromLast = 180;
   for (let i = 1; i < planetsArray.length + 1; i++) {
     planetsArray[i - 1].mesh.name = `Planet ${i}`;
@@ -151,6 +136,9 @@ function createPlanets() {
     console.log(planetsArray[i - 1].distance);
   }
   console.log(planetMaterials[3]);
+  // Sun texture/material init here, to expand in future
+  const sunTexture = textureLoader.load("./sun.jpg");
+  sunMaterial = new THREE.MeshPhongMaterial({ map: sunTexture });
   const sun = new THREE.Mesh(geometrySun, sunMaterial);
   console.log(sun, "HELLO");
 
