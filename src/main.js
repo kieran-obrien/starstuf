@@ -58,8 +58,12 @@ raycasterInit();
 let textureCounter = 1;
 let planetTextures = [];
 let planetImages = [];
+
 await loadTextures(); // Call the async function
 initImgTextureMenu(planetImages); // Init texture select menu to "hospitable" planetImages
+setTimeout(() => {
+  hideLoadingScreen(); // Call this after loading
+}, 2000);
 
 // Initial planets and other threejs objects
 let planetsArray = [];
@@ -75,6 +79,13 @@ let isCameraHelio = true;
 animate();
 // ! STRUCTURE ! //   // ! STRUCTURE ! //   // ! STRUCTURE ! //
 
+function hideLoadingScreen() {
+  const loadingScreen = document.getElementById("loading-screen");
+  loadingScreen.style.opacity = "0"; // Fade out effect
+  setTimeout(() => {
+    loadingScreen.style.display = "none"; // Remove from view
+  }, 500); // Wait for fade-out animation
+}
 //? Add bootstrap tootips in future?
 
 async function loadTextures() {

@@ -28,24 +28,15 @@
     <title>helio</title>
   </head>
   <body>
+    <div id="loading-screen">
+        <div class="loader"></div>
+        <h5>Loading Assets</h1>
+      </div>
     <div class="container">
       <div class="container-h1">
         <h1>Helio</h1>
       </div>
       <div id="user-interface">
-        <div id="planet-count-form">
-          <form>
-            <label for="planet-count">Planets</label>
-            <input
-              type="range"
-              id="planet-count"
-              name="planet-count"
-              min="0"
-              max="10"
-              value="1"
-            />
-          </form>
-        </div>
         <div id="main-buttons-div">
           <div id="pause-button-div">
             <i class="ri-pause-large-line icon" id="pause-button"></i>
@@ -56,6 +47,20 @@
             <i class="ri-camera-switch-line icon"></i>
             <!--<button id="helio-button">Helio</button> -->
           </div>
+        </div>
+        <div id="planet-count-form">
+          <form>
+            <label for="planet-count"></label>
+            <i class="ri-planet-line planet-icon"></i>
+            <input
+              type="range"
+              id="planet-count"
+              name="planet-count"
+              min="0"
+              max="10"
+              value="1"
+            />
+          </form>
         </div>
       </div>
     </div>
