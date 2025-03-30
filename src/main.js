@@ -2,7 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { stars } from "./stars.js";
 import lightingSetup from "./lighting-setup.js";
-import { getPauseButton } from "./controls/pause-controls.js";
+import { getPauseButton, getIcons } from "./controls/pause-controls.js";
 import { raycasterInit, updateRaycastSelectPlanetColor } from "./raycaster.js";
 import {
   initCameraControls,
@@ -224,6 +224,7 @@ const setPaused = (value) => {
   isPaused = value;
 };
 getPauseButton();
+getIcons();
 
 // Camera Focus Functionality
 const setIsCameraHelio = (value) => {
