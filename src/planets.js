@@ -1,4 +1,4 @@
-import { planetsArray } from "./main";
+import * as THREE from "three";
 
 const updatePlanetOrbitPosition = (planetsArray, sun) => {
   // If not paused, update the planets
@@ -23,4 +23,10 @@ const updatePlanetOrbitPosition = (planetsArray, sun) => {
   sun.rotation.y += 0.0005; // Sun rotation
 };
 
-export { updatePlanetOrbitPosition };
+const getPlanetGeometries = () => {
+  const geometrySun = new THREE.SphereGeometry(10, 32, 32);
+  const geometryPlanet = new THREE.SphereGeometry(4, 15, 15);
+  return [geometrySun, geometryPlanet];
+};
+
+export { updatePlanetOrbitPosition, getPlanetGeometries };

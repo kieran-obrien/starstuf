@@ -8,9 +8,10 @@ import {
   initCameraControls,
   isSetToPlanetCameraMode,
 } from "./controls/camera-controls.js";
-import { updatePlanetOrbitPosition } from "./planets.js";
+import { updatePlanetOrbitPosition, getPlanetGeometries } from "./planets.js";
 import { initThreeJsAssets } from "./three-setup.js";
 //import planetControlsHTML from "./planet-controls-html.js"
+import updatePlanetControlsHTML from "./controls/off-canvas-controls.js";
 
 // The two main classes for Helio
 import TextureObj from "./classes/TextureObj.js";
@@ -18,10 +19,7 @@ import Planet from "./classes/Planet.js";
 
 import { loadThreeJsTextures } from "./texture-img-loader.js";
 
-//? Add bootstrap tootips in future?
-
-let readyToStart = false; //? Is this how we implement a loading screen too?
-
+// ! STRUCTURE ! //   // ! STRUCTURE ! //   // ! STRUCTURE ! //
 // Init threejs assets
 const [
   scene,
@@ -43,56 +41,51 @@ const [ambientLight, ambientLight2, lightHelper, gridHelper] = lightingSetup(
   previewScene
 );
 
-// Setting intial geometry and material for the sun and planets
-const geometrySun = new THREE.SphereGeometry(10, 32, 32);
-const geometryPlanet = new THREE.SphereGeometry(4, 15, 15);
+// Set intial geometry for the sun and planets
+// Can be adjusted in planets.js
+const [geometrySun, geometryPlanet] = getPlanetGeometries();
 
-// Load the planet textures
+// Raycaster for selecting threejs objects in scene
+raycasterInit();
+
+// Load the planet textures and images for selection menu
 let textureCounter = 1;
 let planetTextures = [];
+let imgs = [];
+await loadTextures(); // Call the async function
+initImgTextureMenu(); // Init texture select menu to "hospitable" imgs
 
+// Initial planets and other threejs objects
 let planetsArray = [];
 let planetMaterials = [];
 let sun;
-
-let imgs = [];
-
 let sunMaterial;
+[planetsArray, planetMaterials, sun] = await createPlanets(); // Create planets after loading all textures
 
-// Load the textures/imgs
-let imgsTexturesLoaded = false;
+// Init require vars and call animate to start the app
+let planetCount = 0;
+let isPaused = false;
+let isCameraHelio = true;
+animate();
+// ! STRUCTURE ! //   // ! STRUCTURE ! //   // ! STRUCTURE ! //
+
+//? Add bootstrap tootips in future?
 
 async function loadTextures() {
   // Await the resolved promise
-  [imgsTexturesLoaded, planetTextures, imgs] = await loadThreeJsTextures(
+  [planetTextures, imgs] = await loadThreeJsTextures(
     textureCounter,
     planetTextures,
     imgLoader,
     textureLoader,
     imgs
   );
-  console.log("Textures Loaded:", imgsTexturesLoaded);
   console.log(
     "TextureTHREEjs and Texture HTML imgs arrays:",
     planetTextures,
     imgs
   );
 }
-
-// Call the async function
-loadTextures();
-
-
-// ! WILL CHANGE TO ASYNC
-const checkImgsAndTexturesLoaded = setInterval(() => {
-  // Need to be finished loading before planet init
-  if (imgsTexturesLoaded) {
-    initImgTextureMenu(); // Init texture select menu to "hospitable" imgs
-    [planetsArray, planetMaterials, sun] = createPlanets(); // Create planets after loading all textures
-    clearInterval(checkImgsAndTexturesLoaded);
-    imgsTexturesLoaded = false; // Done with flag
-  }
-}, 100);
 
 // Create and populate array of ten planet objects
 // Also create array of planet materials
@@ -108,7 +101,7 @@ function initPlanetMesh() {
   );
 }
 
-const initPlanetMaterials = (counter, texturesArray) => {
+function initPlanetMaterials(counter, texturesArray) {
   return Array(texturesArray.length)
     .fill()
     .map(() => {
@@ -118,8 +111,8 @@ const initPlanetMaterials = (counter, texturesArray) => {
       counter++;
       return material;
     });
-};
-function createPlanets() {
+}
+async function createPlanets() {
   planetMaterials = initPlanetMaterials(0, planetTextures); // For texture select menu
   const planetsArray = Array(10).fill().map(initPlanetMesh);
   let distanceFromLast = 180;
@@ -146,14 +139,13 @@ function createPlanets() {
   scene.add(sun);
   sun.position.set(0, 0, 0);
 
-  readyToStart = true;
   console.log("Planets created");
   console.log(planetsArray);
   return [planetsArray, planetMaterials, sun];
 }
 
 // Add planet functionality
-let planetCount = 0;
+
 function handlePlanets(planets) {
   // *TODO FUTURE WORK - EDIT THESE FUNCTIONS OUT OF GLOBAL SCOPE
   // Update planet size
@@ -188,7 +180,6 @@ function handlePlanets(planets) {
   // *TODO -------------------------------------------------------*/
 
   // Add planet control forms
-  let planetCountCheck = planetCount;
   planetCount = document.getElementById("planet-count").value;
   // Add the planets
   for (let i = 0; i < planets.length; i++) {
@@ -231,14 +222,12 @@ const arrow = () => {
 stars(scene, camera);
 
 // Pause and play functionality
-let isPaused = false;
 const setPaused = (value) => {
   isPaused = value;
 };
 getPauseButton();
 
 // Camera Focus Functionality
-let isCameraHelio = true;
 const setIsCameraHelio = (value) => {
   isCameraHelio = value;
 };
@@ -251,12 +240,8 @@ function setToHelioCameraMode() {
 const helioButton = document.getElementById("helio-button");
 helioButton.addEventListener("click", setToHelioCameraMode);
 
-raycasterInit();
-
-/*Main function to animate each frame
- Called recursively so constantly invoking any function called in a frame
-*/
 function animate() {
+  // Main function to animate each frame
   // arrow(); // Arrow orbit effect
   handlePlanets(planetsArray); // Handle planet controls
   if (!isPaused) updatePlanetOrbitPosition(planetsArray, sun);
@@ -267,13 +252,6 @@ function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
 }
-
-const checkReadyToStart = setInterval(() => {
-  if (readyToStart) {
-    animate();
-    clearInterval(checkReadyToStart);
-  }
-}, 100);
 
 let currentControlPlanet;
 
@@ -289,50 +267,7 @@ function showControls(planet, i) {
   if (offCanvasBody.lastElementChild.nodeName === "FORM") {
     offCanvasBody.removeChild(offCanvasBody.lastElementChild);
   }
-  const planetControlsHTML = `<label for="planet-size">Mass</label>
-            <input oninput="updatePlanetSize(${i})"
-                type="range"
-                class = "form-range"
-                id="planet-size-${i}"
-                name="planet-size"
-                min=".5"
-                max="4"
-                step="0.1"
-                value="${planetsArray[i].size}"
-            />
-            <label for="orbit-speed">Orbit Speed</label>
-            <input oninput="updatePlanetSpeed(${i})"
-                type="range"
-                class = "form-range"
-                id="orbit-speed-${i}"
-                name="orbit-speed"
-                min="1"
-                max="10"
-                step="0.1"
-                value="${planetsArray[i].speed * 8000}"
-            />
-            <label for="planet-spin">Spin Speed</label>
-            <input oninput="updatePlanetSpinSpeed(${i})"
-                type="range"
-                class = "form-range"
-                id="planet-spin-${i}"
-                name="planet-spin"
-                min="1"
-                max="12"
-                step="0.1"
-                value="${planetsArray[i].spinSpeed * 800}"
-            />
-            <label for="planet-distance">Distance</label>
-            <input oninput="updatePlanetDistance(${i})"
-                type="range"
-                class = "form-range"
-                id="planet-distance-${i}"
-                name="planet-distance"
-                min="${planet.minmaxdist[0] / 10}"
-                max="${planet.minmaxdist[1] / 10}"
-                step="0.1"
-                value="${planetsArray[i].distance / 10}"
-            />`;
+  const planetControlsHTML = updatePlanetControlsHTML(i, planetsArray);
   const form = document.createElement("form");
   form.innerHTML = planetControlsHTML;
   offCanvasBody.appendChild(form);
@@ -342,7 +277,7 @@ function showControls(planet, i) {
   bsOffcanvas.show();
 }
 
-const updatePlanetPreviewScene = () => {
+function updatePlanetPreviewScene() {
   //! Lets try to minimise the amount of work done here
   //! We only want to update the preview scene when a new planet is raySelected
   // Remove only the planets from the previewScene
@@ -365,7 +300,7 @@ const updatePlanetPreviewScene = () => {
     previewScene.add(previewPlanet);
   }
   previewRenderer.render(previewScene, camera2);
-};
+}
 
 // Planet control texture menu functionality
 let textureOptions = document.querySelectorAll(".texture-option");
@@ -374,7 +309,7 @@ textureOptions = Array.from(textureOptions).map((option) =>
 );
 
 // Init texture menu with initial "hospitable" value
-const initImgTextureMenu = () => {
+function initImgTextureMenu() {
   const textureOptions = document.querySelectorAll(".texture-img");
   for (let i = 0; i < textureOptions.length; i++) {
     if (textureOptions[i].hasChildNodes()) {
@@ -384,7 +319,7 @@ const initImgTextureMenu = () => {
     textureOptions[i].appendChild(img);
     img.src = imgs[i + 4].src;
   }
-};
+}
 
 const setTextureGrid = (event) => {
   const selectedTexture = event.target.innerText;

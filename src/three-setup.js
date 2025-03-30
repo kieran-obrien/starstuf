@@ -8,7 +8,7 @@ const initThreeJsAssets = () => {
     75,
     window.innerWidth / window.innerHeight,
     0.1,
-    1000
+    5000
   ); // field of view, aspect ratio, near, far
 
   const renderer = new THREE.WebGLRenderer({
@@ -45,7 +45,7 @@ const initThreeJsAssets = () => {
   // Init THREE imgloader/textureloader
   const imgLoader = new THREE.ImageLoader();
   const textureLoader = new THREE.TextureLoader();
-
+  console.log(camera)
   return [
     scene,
     previewScene,
