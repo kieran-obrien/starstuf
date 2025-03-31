@@ -45,7 +45,17 @@ const initThreeJsAssets = () => {
   // Init THREE imgloader/textureloader
   const imgLoader = new THREE.ImageLoader();
   const textureLoader = new THREE.TextureLoader();
-  console.log(camera)
+  console.log(camera);
+
+  // Make app dynamically resizable
+  window.addEventListener("resize", onWindowResize, false);
+  function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
   return [
     scene,
     previewScene,

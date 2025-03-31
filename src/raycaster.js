@@ -79,4 +79,4 @@ const updateRaycastSelectPlanetColor = () => {
   }
 };
 
-export { raycasterInit, updateRaycastSelectPlanetColor };
+export { raycasterInit, updateRaycastSelectPlanetColor, };

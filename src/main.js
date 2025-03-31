@@ -23,6 +23,7 @@ import Planet from "./classes/Planet.js";
 import {
   loadThreeJsTextures,
   initImgTextureMenu,
+  hideLoadingScreen,
 } from "./texture-img-loader.js";
 
 // ! STRUCTURE ! //   // ! STRUCTURE ! //   // ! STRUCTURE ! //
@@ -79,13 +80,6 @@ let isCameraHelio = true;
 animate();
 // ! STRUCTURE ! //   // ! STRUCTURE ! //   // ! STRUCTURE ! //
 
-function hideLoadingScreen() {
-  const loadingScreen = document.getElementById("loading-screen");
-  loadingScreen.style.opacity = "0"; // Fade out effect
-  setTimeout(() => {
-    loadingScreen.style.display = "none"; // Remove from view
-  }, 500); // Wait for fade-out animation
-}
 //? Add bootstrap tootips in future?
 
 async function loadTextures() {

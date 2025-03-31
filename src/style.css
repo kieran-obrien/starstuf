@@ -89,6 +89,11 @@ h5 {
   font-weight: bolder;
   font-family: Bungee Hairline;
   color: white;
+
+  word-wrap: break-word; /* Allows long words to break */
+  overflow-wrap: break-word; /* Ensures wrapping */
+  white-space: normal; /* Allows text to wrap */
+  max-width: 90%; /* Ensures it respects the parent width */
 }
 
 .container-md {
@@ -153,33 +158,37 @@ textarea {
 
 /* Full-screen loading screen */
 #loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: black;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-size: 24px;
-    z-index: 9999; /* Ensure it stays on top */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 24px;
+  z-index: 9999; /* Ensure it stays on top */
+}
+
+/* Simple loader animation */
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  /* Simple loader animation */
-  .loader {
-    width: 50px;
-    height: 50px;
-    border: 5px solid white;
-    border-top-color: transparent;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 10px;
+  100% {
+    transform: rotate(360deg);
   }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+}
