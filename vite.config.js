@@ -1,3 +1,6 @@
 export default {
-    base: "/helio/",
+  base: "/helio/",
+  esbuild: {
+    target: "esnext", // enables top-level await support
+  },
 };

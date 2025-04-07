@@ -27,6 +27,7 @@ import {
 } from "./texture-img-loader.js";
 
 // ! STRUCTURE ! //   // ! STRUCTURE ! //   // ! STRUCTURE ! //
+
 // Init threejs assets
 const [
   scene,
