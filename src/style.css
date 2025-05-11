@@ -2,7 +2,7 @@ html {
   margin: 0px;
   height: 100%;
   width: 100%;
-  font-family: Karla;
+  font-family: Sansation;
 }
 
 body {
@@ -36,9 +36,9 @@ body {
 
 h1 {
   font-size: 4em;
-  font-weight: 600;
+  font-weight: 300;
   align-items: end;
-  font-family: Karla;
+  font-family: Sansation;
   height: 65px;
 }
 h1,
@@ -78,6 +78,11 @@ form {
 
 .offcanvas-body {
   flex-grow: 0;
+  padding-top: 0;
+}
+
+.offcanvas-header {
+  padding-bottom: 0;
 }
 
 #offcanvas offcanvas-end {
@@ -85,9 +90,9 @@ form {
 }
 
 h5 {
-  font-size: 3em;
-  font-weight: bolder;
-  font-family: Karla;
+  font-size: 2.5em;
+  font-weight: normal;
+  font-family: Sansation;
   color: white;
 
   word-wrap: break-word; /* Allows long words to break */
@@ -140,6 +145,10 @@ textarea {
   resize: none;
 }
 
+button {
+  font-family: Sansation;
+}
+
 .form-text {
   color: rgb(175, 175, 175);
 }
@@ -154,6 +163,10 @@ textarea {
   margin: 20px;
   font-size: 1.5em;
   font-weight: lighter;
+}
+
+.table-dark {
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 /* Full-screen loading screen */
