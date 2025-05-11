@@ -25,6 +25,10 @@ import {
   initImgTextureMenu,
   hideLoadingScreen,
 } from "./texture-img-loader.js";
+import {
+  planetCountRangeInput,
+  updatePlanetListTable,
+} from "./system-info-menu.js";
 
 // ! STRUCTURE ! //   // ! STRUCTURE ! //   // ! STRUCTURE ! //
 
@@ -164,6 +168,7 @@ function handlePlanets(planets) {
   // Update planet size
   const updatePlanetSize = (index) => {
     console.log(index);
+    updatePlanetListTable(planets);
     const size = document.getElementById(`planet-size-${index}`).value;
     console.log(size);
     planets[index].updatePlanetSize(size);
@@ -172,6 +177,7 @@ function handlePlanets(planets) {
 
   // Update planet orbit speed
   const updatePlanetSpeed = (index) => {
+    updatePlanetListTable(planets);
     const speed = document.getElementById(`orbit-speed-${index}`).value;
     planets[index].updatePlanetSpeed(speed);
   };
@@ -200,9 +206,15 @@ function handlePlanets(planets) {
       planets[i].inOrbit = false;
       scene.remove(planets[i].mesh);
     }
+    //console.log(i, planetCount);
+    //console.log(planets[0].inOrbit);
     if (i < planetCount) {
       planets[i].inOrbit = true;
       scene.add(planets[i].mesh);
+    }
+    if (planetCount === 0) {
+      console.log("NAE PLANETS");
+      planets[0].inOrbit = false;
     }
   }
 }
@@ -249,6 +261,7 @@ function animate() {
   // Main function to animate each frame
   // arrow(); // Arrow orbit effect
   handlePlanets(planetsArray); // Handle planet controls
+  //updatePlanetListTable(planetsArray);
   if (!isPaused) updatePlanetOrbitPosition(planetsArray, sun);
   updateRaycastSelectPlanetColor();
   controls.update();
