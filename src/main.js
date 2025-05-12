@@ -82,6 +82,8 @@ let sunMaterial;
 let planetCount = 0;
 let isPaused = false;
 let isCameraHelio = true;
+// Init system-info table
+updatePlanetListTable(planetsArray);
 animate();
 // ! STRUCTURE ! //   // ! STRUCTURE ! //   // ! STRUCTURE ! //
 

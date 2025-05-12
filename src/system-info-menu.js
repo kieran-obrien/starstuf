@@ -1,8 +1,7 @@
 const planetCountRangeInput = document.getElementById("planet-count");
 import { planetsArray } from "./main";
 
-planetCountRangeInput.addEventListener("change", (event) => {
-  console.log("here");
+planetCountRangeInput.addEventListener("change", () => {
   updatePlanetListTable(planetsArray);
 });
 
