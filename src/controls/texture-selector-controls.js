@@ -1,6 +1,8 @@
 import { planetImages } from "../core/texture-img-loader";
 import { updatePlanetTexture } from "./off-canvas-controls";
 
+let currentControlPlanet;
+
 // Planet control texture menu functionality
 let textureOptions = document.querySelectorAll(".texture-option");
 textureOptions = Array.from(textureOptions).map((option) =>
@@ -19,7 +21,8 @@ for (let group of textureOptions) {
   group.addEventListener("click", setTextureGrid);
 }
 
-const updateTextureControls = (textureCode) => {
+const updateTextureControls = (textureCode, controlPlanet) => {
+  currentControlPlanet = controlPlanet;
   const textureGrid = document.querySelector(".row.row-cols-2.row.g-2");
   const textureOptions = document.querySelectorAll(".texture-img");
   // Update texture menu to reflect current texture of raySelected planet, upon selection

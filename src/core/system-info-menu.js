@@ -5,8 +5,8 @@ planetCountRangeInput.addEventListener("change", () => {
   updatePlanetListTable(planetsArray);
 });
 
-const updatePlanetListTable = (planets) => {
-  for (let i = 1; i < planets.length + 1; i++) {
+const updatePlanetListTable = () => {
+  for (let i = 1; i < planetsArray.length + 1; i++) {
     let planetListTableRow = document.getElementById(
       `planets-list-table-r${i}`
     );
@@ -15,9 +15,9 @@ const updatePlanetListTable = (planets) => {
       return;
     }
     console.log("updating...");
-    planetListTableRow.children[1].textContent = planets[i - 1].name;
-    planetListTableRow.children[2].textContent = planets[i - 1].size;
-    planetListTableRow.children[3].textContent = planets[i - 1].inOrbit;
+    planetListTableRow.children[1].textContent = planetsArray[i - 1].name;
+    planetListTableRow.children[2].textContent = planetsArray[i - 1].size;
+    planetListTableRow.children[3].textContent = planetsArray[i - 1].inOrbit;
   }
 };
 
