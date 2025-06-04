@@ -8,6 +8,7 @@ import {
   setIsCameraHelio,
 } from "../main";
 import { showControls, hideControls } from "../controls/off-canvas-controls";
+import { updatePlanetListTable } from "./system-info-menu";
 
 const raycaster = new THREE.Raycaster();
 
@@ -47,11 +48,19 @@ const raycasterInit = () => {
     if (intersects.length > 0) {
       console.log(intersects);
       const intersectedObject = intersects[0].object;
+
+      for (let p of planetsArray) {
+        // Reset all for system info cam-focus value
+        p.cameraFollow = false;
+        p.controlsSelected = false;
+      }
+
       for (let p of planetsArray) {
         if (p.uuid === intersectedObject.uuid) {
           console.log(`Selected ${p.name}`);
           setIsCameraHelio(false);
           p.cameraFollow = true;
+          updatePlanetListTable(planetsArray);
           const index = planetsArray.indexOf(p);
           p.controlsSelected = true;
           showControls(p, index);

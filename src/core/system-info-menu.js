@@ -17,7 +17,12 @@ const updatePlanetListTable = () => {
     console.log("updating...");
     planetListTableRow.children[1].textContent = planetsArray[i - 1].name;
     planetListTableRow.children[2].textContent = planetsArray[i - 1].size;
-    planetListTableRow.children[3].textContent = planetsArray[i - 1].inOrbit;
+    const isInOrbit = planetsArray[i - 1].inOrbit ? "✓" : "✗";
+    planetListTableRow.children[3].textContent = isInOrbit;
+    const cameraFocusIconClass = planetsArray[i - 1].cameraFollow
+      ? "ri-video-on-fill icon system-icon"
+      : "ri-video-off-fill icon system-icon";
+    planetListTableRow.children[4].children[0].className = cameraFocusIconClass;
   }
 };
 
