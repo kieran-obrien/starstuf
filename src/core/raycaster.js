@@ -69,7 +69,10 @@ const raycasterInit = () => {
           p.cameraFollow = false;
         }
       }
-      if (intersectedObject.name === "sun") hideControls(); // When sun clicked, close offcanvas
+      if (intersectedObject.name === "sun") {
+        hideControls();
+        updatePlanetListTable(planetsArray);
+      }
     }
   }
 };

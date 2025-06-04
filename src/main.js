@@ -144,6 +144,10 @@ const setIsCameraHelio = (value) => {
 
 function setToHelioCameraMode() {
   isCameraHelio = true;
+  for (let p of planetsArray) {
+    p.cameraFollow = false;
+  }
+  updatePlanetListTable(planetsArray);
   camera.position.set(0, 0, 150);
   camera.lookAt(0, 0, 0);
 }
