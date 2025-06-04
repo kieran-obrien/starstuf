@@ -26,7 +26,9 @@ const updatePlanetOrbitPosition = (planetsArray, sun) => {
 const getPlanetGeometries = () => {
   const geometrySun = new THREE.SphereGeometry(10, 32, 32);
   const geometryPlanet = new THREE.SphereGeometry(4, 15, 15);
-  return [geometrySun, geometryPlanet];
+  return { geometrySun, geometryPlanet };
 };
 
-export { updatePlanetOrbitPosition, getPlanetGeometries };
+const { geometrySun, geometryPlanet } = getPlanetGeometries();
+
+export { updatePlanetOrbitPosition, geometryPlanet, geometrySun };

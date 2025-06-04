@@ -68,4 +68,25 @@ const initThreeJsAssets = () => {
   ];
 };
 
-export { initThreeJsAssets };
+// Init threejs assets
+const [
+  scene,
+  previewScene,
+  camera,
+  camera2,
+  renderer,
+  previewRenderer,
+  imgLoader,
+  textureLoader,
+] = initThreeJsAssets();
+
+export {
+  scene,
+  previewScene,
+  camera,
+  camera2,
+  renderer,
+  previewRenderer,
+  imgLoader,
+  textureLoader,
+};

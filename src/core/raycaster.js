@@ -6,9 +6,8 @@ import {
   renderer,
   isCameraHelio,
   setIsCameraHelio,
-  showControls,
-} from "./main";
-import { hideControls } from "./controls/off-canvas-controls";
+} from "../main";
+import { showControls, hideControls } from "../controls/off-canvas-controls";
 
 const raycaster = new THREE.Raycaster();
 
@@ -79,4 +78,4 @@ const updateRaycastSelectPlanetColor = () => {
   }
 };
 
-export { raycasterInit, updateRaycastSelectPlanetColor, };
+export { raycasterInit, updateRaycastSelectPlanetColor };

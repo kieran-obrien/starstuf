@@ -1,4 +1,6 @@
-import { planetsArray, planetMaterials } from "../main";
+import { planetsArray } from "../main";
+import planetMaterials from "../planets/planet-material-factory";
+import updateTextureControls from "./texture-selector-controls";
 
 function updatePlanetControlsHTML(i, planetsArray) {
   return `<label for="planet-size">Mass</label>
@@ -47,6 +49,29 @@ function updatePlanetControlsHTML(i, planetsArray) {
             />`;
 }
 
+let currentControlPlanet;
+function showControls(planet, i) {
+  currentControlPlanet = planet;
+  console.log(currentControlPlanet);
+  updateTextureControls(planet.textureCode);
+  const header = document.getElementById("offcanvasTitle");
+  header.innerHTML = `${planet.name}`;
+  const offcanvasElement = document.getElementById("offcanvasExample");
+  const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
+  const offCanvasBody = document.getElementById("offcanvas-body");
+  if (offCanvasBody.lastElementChild.nodeName === "FORM") {
+    offCanvasBody.removeChild(offCanvasBody.lastElementChild);
+  }
+  const planetControlsHTML = updatePlanetControlsHTML(i, planetsArray);
+  const form = document.createElement("form");
+  form.innerHTML = planetControlsHTML;
+  offCanvasBody.appendChild(form);
+  const planetNameInput = document.getElementById("planet-name-input");
+  planetNameInput.value = "";
+  planetNameInput.placeholder = planet.name;
+  bsOffcanvas.show();
+}
+
 const updatePlanetTexture = (index) => {
   const p = planetsArray.find((planet) => planet.controlsSelected);
   p.mesh.material = planetMaterials[index];
@@ -57,11 +82,18 @@ const updatePlanetTexture = (index) => {
 
 const hideControls = () => {
   console.log("Attempting to hide offcanvas");
-const offcanvasElement = document.getElementById("offcanvasExample");
-if (offcanvasElement) {
-    const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement) || new bootstrap.Offcanvas(offcanvasElement);
+  const offcanvasElement = document.getElementById("offcanvasExample");
+  if (offcanvasElement) {
+    const bsOffcanvas =
+      bootstrap.Offcanvas.getInstance(offcanvasElement) ||
+      new bootstrap.Offcanvas(offcanvasElement);
     bsOffcanvas.hide();
-}
+  }
 };
 
-export { updatePlanetControlsHTML, updatePlanetTexture, hideControls };
+export {
+  updatePlanetControlsHTML,
+  updatePlanetTexture,
+  showControls,
+  hideControls,
+};
