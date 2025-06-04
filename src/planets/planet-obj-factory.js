@@ -9,6 +9,7 @@ import Planet from "../classes/Planet";
 async function createPlanets() {
   const planetsArray = Array(10).fill().map(initPlanetMesh);
   let distanceFromLast = 180;
+  planetsArray[0].inOrbit = true;
   for (let i = 1; i < planetsArray.length + 1; i++) {
     planetsArray[i - 1].mesh.name = `Planet ${i}`;
     planetsArray[i - 1].name = `Planet ${i}`;
