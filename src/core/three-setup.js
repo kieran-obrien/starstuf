@@ -39,7 +39,9 @@ const initThreeJsAssets = () => {
   // Set the renderer size and camera position
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  camera.position.setZ(50);
+  camera.position.setX(0);
+  camera.position.setY(280);
+  camera.position.setZ(350);
   camera2.position.setZ(10);
 
   // Init THREE imgloader/textureloader
