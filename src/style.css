@@ -149,6 +149,11 @@ button {
   font-family: Sansation;
 }
 
+hr {
+  padding: 0.5rem, 0.5rem;
+  margin: 0.75rem;
+}
+
 .form-text {
   color: rgb(175, 175, 175);
 }
@@ -166,7 +171,7 @@ button {
 }
 
 .system-icon {
-  font-size: 1.5rem
+  font-size: 1.5rem;
 }
 
 .table-dark {
