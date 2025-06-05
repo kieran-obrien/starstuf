@@ -51,9 +51,6 @@ form {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  /*position: fixed;
-    /*top: 0;
-    /*left: 0;*/
   z-index: 1;
   padding: 10px;
   background-color: rgba(0, 0, 0, 0.5);
@@ -95,10 +92,10 @@ h5 {
   font-family: Sansation;
   color: white;
 
-  word-wrap: break-word; /* Allows long words to break */
-  overflow-wrap: break-word; /* Ensures wrapping */
-  white-space: normal; /* Allows text to wrap */
-  max-width: 90%; /* Ensures it respects the parent width */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  max-width: 90%;
 }
 
 .container-md {
@@ -159,14 +156,14 @@ hr {
 }
 
 .icon {
-  margin: 20px;
-  font-size: 2em;
+  margin: 15px;
+  font-size: 1.75em;
   font-weight: lighter;
 }
 
 .planet-icon {
   margin: 20px;
-  font-size: 1.5em;
+  font-size: 1.25em;
   font-weight: lighter;
 }
 
@@ -178,7 +175,6 @@ hr {
   background-color: rgba(0, 0, 0, 0.25);
 }
 
-/* Full-screen loading screen */
 #loading-screen {
   position: fixed;
   top: 0;
@@ -192,10 +188,9 @@ hr {
   align-items: center;
   flex-direction: column;
   font-size: 24px;
-  z-index: 9999; /* Ensure it stays on top */
+  z-index: 9999;
 }
 
-/* Simple loader animation */
 .loader {
   width: 50px;
   height: 50px;
