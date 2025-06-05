@@ -1,9 +1,7 @@
 import * as THREE from "three";
 
 const updatePlanetOrbitPosition = (planetsArray, sun) => {
-  // If not paused, update the planets
   const currentTime = Date.now();
-  let distanceCounter = 0;
   planetsArray.forEach((p) => {
     // Calculate the change in angle based on the speed and elapsed time
     const deltaAngle = (currentTime - p.lastUpdateTime) * p.speed;
@@ -12,11 +10,10 @@ const updatePlanetOrbitPosition = (planetsArray, sun) => {
 
     // Set the new position based on the current angle
     p.mesh.position.set(
-      Math.cos(p.currentAngle) * (p.distance + distanceCounter),
+      Math.cos(p.currentAngle) * p.distance,
       0,
-      Math.sin(p.currentAngle) * (p.distance + distanceCounter)
+      Math.sin(p.currentAngle) * p.distance
     );
-    distanceCounter += 90;
     // Rotate the planet
     p.mesh.rotation.y += p.spinSpeed;
   });

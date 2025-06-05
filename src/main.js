@@ -48,6 +48,8 @@ import {
 
 import createPlanets from "./planets/planet-obj-factory.js";
 
+import createOrbitCircle from "./planets/orbit-paths.js";
+
 // Init required vars
 let planetsArray = [];
 let sun;
@@ -86,24 +88,25 @@ function handlePlanets(planets) {
   // Update planet distance
   const updatePlanetDistance = (index) => {
     const distance = document.getElementById(`planet-distance-${index}`).value;
+    scene.remove(planets[index].orbitPath);
     planets[index].updatePlanetDistance(distance);
+    scene.add(planets[index].orbitPath);
   };
   window.updatePlanetDistance = updatePlanetDistance;
   // *TODO -------------------------------------------------------*/
 
-  // Add planet control forms
+  // This handles showing/removing planets from scene
   planetCount = document.getElementById("planet-count").value;
-  // Add the planets
   for (let i = 0; i < planets.length; i++) {
     if (scene.children.includes(planets[i].mesh)) {
       planets[i].inOrbit = false;
       scene.remove(planets[i].mesh);
+      scene.remove(planets[i].orbitPath);
     }
-    //console.log(i, planetCount);
-    //console.log(planets[0].inOrbit);
     if (i < planetCount) {
       planets[i].inOrbit = true;
       scene.add(planets[i].mesh);
+      scene.add(planets[i].orbitPath);
     }
     if (planetCount === 0) {
       console.log("NAE PLANETS");

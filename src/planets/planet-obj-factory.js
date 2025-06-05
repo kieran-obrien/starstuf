@@ -5,22 +5,21 @@ import planetMaterials from "./planet-material-factory";
 import * as THREE from "three";
 import { scene } from "../core/three-setup";
 import Planet from "../classes/Planet";
+import createOrbitCircle from "./orbit-paths";
 
 async function createPlanets() {
   const planetsArray = Array(10).fill().map(initPlanetMesh);
-  let distanceFromLast = 180;
+  let distanceFromLast = 270;
   planetsArray[0].inOrbit = true;
   for (let i = 1; i < planetsArray.length + 1; i++) {
-    planetsArray[i - 1].mesh.name = `Planet ${i}`;
-    planetsArray[i - 1].name = `Planet ${i}`;
-    planetsArray[i - 1].distance = distanceFromLast;
+    const planet = planetsArray[i - 1];
+    planet.mesh.name = `Planet ${i}`;
+    planet.name = `Planet ${i}`;
+    planet.distance = distanceFromLast;
+    planet.minmaxdist = [distanceFromLast - 90, distanceFromLast + 90];
+    planet.index = i + 1;
+    planet.orbitPath = createOrbitCircle(planet.distance);
     distanceFromLast += 180;
-    planetsArray[i - 1].minmaxdist = [
-      distanceFromLast - 270,
-      distanceFromLast - 90,
-    ];
-    planetsArray[i - 1].index = i;
-    console.log(planetsArray[i - 1].distance);
   }
   console.log(planetMaterials[3]);
   // Sun texture/material init here, to expand in future

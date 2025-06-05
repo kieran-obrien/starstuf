@@ -1,3 +1,5 @@
+import createOrbitCircle from "../planets/orbit-paths";
+
 // Set planet class
 class Planet {
   constructor(size, orbitSpeed, mesh) {
@@ -42,6 +44,7 @@ class Planet {
   }
   updatePlanetDistance(distance) {
     this.distance = distance * 10;
+    this.orbitPath = createOrbitCircle(this.distance);
   }
 }
 
