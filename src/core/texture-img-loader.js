@@ -79,5 +79,6 @@ function hideLoadingScreen() {
 }
 
 const { planetImages, planetTextures } = await loadTextures();
+initImgTextureMenu(planetImages);
 
-export { initImgTextureMenu, hideLoadingScreen, planetImages, planetTextures };
+export { hideLoadingScreen, planetTextures, planetImages };

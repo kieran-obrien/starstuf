@@ -1,5 +1,6 @@
-import { planetsArray, isPaused, setPaused } from "../main.js";
+import { planetsArray } from "../main.js";
 
+let isPaused = false;
 const pausePlay = () => {
   for (let i = 0; i < planetsArray.length; i++) {
     planetsArray[i].lastUpdateTime = Date.now();
@@ -13,32 +14,15 @@ const pausePlay = () => {
 };
 
 let pauseButton;
-
 const getPauseButton = () => {
   pauseButton = document.getElementById("pause-button");
   pauseButton.addEventListener("click", pausePlay);
 };
 
-// TODO RENAME FILE TO REFLECT ICONS INVOLVED NOW?
-const getIcons = () => {
-  const icons = document.querySelectorAll(".icon");
-  icons.forEach((icon) => {
-    icon.addEventListener("mouseover", () => {
-      icon.style.color = "#808080";
-    });
-    icon.addEventListener("mouseout", () => {
-      icon.style.color = "#ffffff";
-    });
-    icon.addEventListener("mousedown", () => {
-      icon.style.color = "#444444";
-    });
-    icon.addEventListener("mouseup", () => {
-      icon.style.color = "#808080";
-    });
-  });
+const setPaused = (value) => {
+  isPaused = value;
 };
 
-getIcons();
 getPauseButton();
 
-export { pausePlay };
+export { isPaused };

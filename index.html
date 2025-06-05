@@ -30,7 +30,6 @@
   <body>
     <div id="loading-screen">
       <div class="loader"></div>
-      <h5>Loading Assets</h5>
     </div>
     <div class="container">
       <div id="user-interface">
@@ -57,7 +56,24 @@
             <i class="ri-fullscreen-fill icon" id="fullscreen-btn"></i>
           </div>
         </div>
+
         <div id="planet-count-form">
+          <div id="credits-help-section">
+            <div id="credits-button-div">
+              <i
+                class="ri-information-2-fill credits-help-icon"
+                data-bs-toggle="modal"
+                data-bs-target="#credits-modal"
+              ></i>
+            </div>
+            <div id="help-button-div">
+              <i
+                class="ri-question-fill credits-help-icon"
+                data-bs-toggle="modal"
+                data-bs-target="#help-modal"
+              ></i>
+            </div>
+          </div>
           <form>
             <label for="planet-count"></label>
             <i class="ri-planet-line planet-icon"></i>
@@ -186,33 +202,14 @@
                 </tbody>
               </table>
             </div>
-            <hr />
-            <div class="d-grid gap-4 col-6 mx-auto">
-              <button class="btn btn-dark" type="button">
-                Load Helio Config
-              </button>
-              <button class="btn btn-dark" type="button">
-                Save Helio Config
-              </button>
-              <button class="btn btn-danger" type="button">Reset System</button>
-              <button
-                class="btn btn-dark"
-                type="button"
-                data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop"
-              >
-                Credits
-              </button>
-            </div>
           </div>
         </div>
-        <!-- ✅ SCROLLABLE CONTENT BODY END -->
       </div>
 
       <!-- CREDITS MODAL -->
       <div
         class="modal fade"
-        id="staticBackdrop"
+        id="credits-modal"
         tabindex="-1"
         aria-labelledby="staticBackdropLabel"
         aria-hidden="true"
@@ -235,6 +232,31 @@
               </p>
               <p>Built with Three.js (MIT)</p>
               <p>Planet textures Copyright © 2015 by texturesforplanets.com.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- HELP MODAL -->
+      <div
+        class="modal fade"
+        id="help-modal"
+        tabindex="-1"
+        aria-labelledby="staticBackdropLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-dark text-light">
+            <div class="modal-header border-0">
+              <h4 class="modal-title" id="staticBackdropLabel">Help</h4>
+              <button
+                type="button"
+                class="btn-close btn-close-white"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <p>Help will go here!</p>
             </div>
           </div>
         </div>

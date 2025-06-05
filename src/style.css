@@ -52,8 +52,7 @@ form {
   flex-direction: column;
   align-items: center;
   z-index: 1;
-  padding: 10px;
-  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
   font-weight: bold;
   font-size: 1.5em;
 }
@@ -156,13 +155,19 @@ hr {
 }
 
 .icon {
-  margin: 8px;
-  font-size: 1.75em;
+  margin: 12px;
+  font-size: 1.6em;
   font-weight: lighter;
 }
 
 .planet-icon {
-  margin: 20px;
+  margin: 10px;
+  font-size: 1.25em;
+  font-weight: lighter;
+}
+
+.credits-help-icon {
+  margin: 10px;
   font-size: 1.25em;
   font-weight: lighter;
 }
@@ -173,6 +178,16 @@ hr {
 
 .table-dark {
   background-color: rgba(0, 0, 0, 0.25);
+}
+
+#credits-help-section {
+  display: flex;
+}
+
+#planet-count-form {
+  display: flex;
+  padding: .5rem;
+  margin: .5rem, .5rem;
 }
 
 #loading-screen {

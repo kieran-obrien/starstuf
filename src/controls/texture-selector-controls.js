@@ -88,7 +88,6 @@ const updateTextureControls = (textureCode) => {
 
 // Selecting texture for planet
 const textureImgOptions = document.querySelectorAll(".texture-img-select");
-console.log(textureImgOptions);
 textureImgOptions.forEach((option) => {
   option.addEventListener("mouseover", () => {
     option.style.backgroundColor = "#303030";
