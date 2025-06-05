@@ -3,6 +3,8 @@ import planetMaterials from "../planets/planet-material-factory";
 import updateTextureControls from "./texture-selector-controls";
 import { updatePlanetListTable } from "../core/system-info-menu";
 
+let currentControlPlanet;
+
 function updatePlanetControlsHTML(i, planetsArray) {
   return `<label for="planet-size">Mass</label>
             <input oninput="updatePlanetSize(${i})"
@@ -51,6 +53,7 @@ function updatePlanetControlsHTML(i, planetsArray) {
 }
 
 function showControls(planet, i) {
+  currentControlPlanet = planet;
   updateTextureControls(planet.textureCode, planet);
   const header = document.getElementById("offcanvasTitle");
   header.innerHTML = `${planet.name}`;
@@ -68,7 +71,7 @@ function showControls(planet, i) {
   planetNameInput.value = "";
   planetNameInput.placeholder = planet.name;
   planetNameInput.addEventListener("input", () => {
-    planet.name = planetNameInput.value;
+    currentControlPlanet.name = planetNameInput.value;
     updatePlanetListTable();
   });
   bsOffcanvas.show();
@@ -98,4 +101,5 @@ export {
   updatePlanetTexture,
   showControls,
   hideControls,
+  currentControlPlanet,
 };
