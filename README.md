@@ -1,6 +1,6 @@
 # 🌌 Helio
 
-<em>**Helio**</em> is a 3D solar system simulator built with Vanilla JavaScript, Vite, and WebGL (via Three.js). 
+<em>**Helio**</em> is a 3D solar system simulator built with Vanilla JavaScript, Bootstrap CSS, Vite, and WebGL (via Three.js). 
 
 The project simulates planetary motion, allows dynamic camera control (heliocentric vs planet-follow mode), and is designed to be lightweight and interactive. The user can simulate a solar system of up to ten planets, with a range customisation options available for each planet.
 > **Currently in active development**  
