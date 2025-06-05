@@ -1,23 +1,17 @@
 import "./style.css";
-
 import "./core/stars.js";
-
 import {
   ambientLight,
   ambientLight2,
   lightHelper,
   gridHelper,
 } from "./core/light-grid-helpers.js";
-
 import "./controls/pause-controls.js";
-
 import {
   raycasterInit,
   updateRaycastSelectPlanetColor,
 } from "./core/raycaster.js";
-
 import { updatePlanetOrbitPosition } from "./core/planets.js";
-
 import {
   scene,
   previewScene,
@@ -26,29 +20,22 @@ import {
   renderer,
   previewRenderer,
 } from "./core/three-setup.js";
-
 import {
   isSetToPlanetCameraMode,
   controls,
 } from "./controls/camera-controls.js";
-
 import {
   planetImages,
   planetTextures,
   initImgTextureMenu,
   hideLoadingScreen,
 } from "./core/texture-img-loader.js";
-
 import {
   planetCountRangeInput,
   updatePlanetListTable,
 } from "./core/system-info-menu.js";
-
 import createPlanets from "./planets/planet-obj-factory.js";
 
-import createOrbitCircle from "./planets/orbit-paths.js";
-
-// Init required vars
 let planetsArray = [];
 let sun;
 let planetCount = 0;
@@ -112,7 +99,6 @@ function handlePlanets(planets) {
   }
 }
 
-// Pause and play functionality
 const setPaused = (value) => {
   isPaused = value;
 };
@@ -141,7 +127,6 @@ function updatePlanetPreviewScene() {
 }
 //!
 
-//! MAIN RUNNING OF APP
 async function initApp() {
   raycasterInit();
   initImgTextureMenu(planetImages); // Init texture select menu to "hospitable" planetImages
