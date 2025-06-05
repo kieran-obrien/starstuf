@@ -2,7 +2,6 @@ import { planetsArray, isPaused, setPaused } from "../main.js";
 
 const pausePlay = () => {
   for (let i = 0; i < planetsArray.length; i++) {
-    // Update the last update time for each planet
     planetsArray[i].lastUpdateTime = Date.now();
   }
   setPaused(!isPaused);

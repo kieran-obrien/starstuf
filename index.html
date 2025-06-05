@@ -33,11 +33,17 @@
       <h5>Loading Assets</h5>
     </div>
     <div class="container">
-      <!--<div class="container-h1">
-        <h1>Helio</h1>
-      </div> -->
       <div id="user-interface">
         <div id="main-buttons-div">
+          <div id="system-menu-button-div">
+            <i
+              class="ri-menu-5-line icon"
+              id="system-menu-button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasList"
+              aria-controls="offcanvasList"
+            ></i>
+          </div>
           <div id="pause-button-div">
             <i class="ri-pause-large-line icon" id="pause-button"></i>
           </div>
@@ -65,15 +71,6 @@
             />
           </form>
         </div>
-        <button
-          class="btn btn-sm btn-dark"
-          type="button"
-          data-bs-toggle="offcanvas"
-          data-bs-target="#offcanvasList"
-          aria-controls="offcanvasList"
-        >
-          System Info
-        </button>
       </div>
     </div>
     <canvas id="bg"></canvas>
