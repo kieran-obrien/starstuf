@@ -1,6 +1,8 @@
-import { isCameraHelio, planetsArray } from "../main";
+import { planetsArray } from "../main";
 import { camera, renderer } from "../core/three-setup";
 import { MapControls } from "three/examples/jsm/controls/MapControls.js";
+import { hideControls } from "./off-canvas-controls";
+import { updatePlanetListTable } from "../core/system-info-menu";
 
 const initCameraControls = () => {
   // const controls = new OrbitControls(camera, renderer.domElement); Alternative controls
@@ -12,15 +14,37 @@ const initCameraControls = () => {
 };
 
 const isSetToPlanetCameraMode = () => {
-  if (!isCameraHelio) {
-    for (let p of planetsArray) {
-      if (p.cameraFollow) {
-        // console.log("Camera following planet");
-        camera.lookAt(p.mesh.position);
-      }
+  for (let p of planetsArray) {
+    if (p.cameraFollow) {
+      // console.log("Camera following planet");
+      camera.lookAt(p.mesh.position);
     }
   }
 };
+
+function setToHelioCameraMode() {
+  for (let p of planetsArray) {
+    p.cameraFollow = false;
+  }
+  updatePlanetListTable(planetsArray);
+  hideControls();
+  camera.position.set(0, 0, 150);
+  camera.lookAt(0, 0, 0);
+}
+const helioButton = document.getElementById("helio-button");
+helioButton.addEventListener("click", setToHelioCameraMode);
+
+function setToOrbitCameraMode() {
+  for (let p of planetsArray) {
+    p.cameraFollow = false;
+  }
+  updatePlanetListTable(planetsArray);
+  hideControls();
+  camera.position.set(0, 600, 0);
+  camera.lookAt(0, 0, 0);
+}
+const orbitButton = document.getElementById("topdown-button");
+orbitButton.addEventListener("click", setToOrbitCameraMode);
 
 const controls = initCameraControls();
 

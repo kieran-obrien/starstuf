@@ -1,12 +1,6 @@
 import * as THREE from "three";
-import {
-  planetsArray,
-  scene,
-  camera,
-  renderer,
-  isCameraHelio,
-  setIsCameraHelio,
-} from "../main";
+import { planetsArray } from "../main";
+import { scene, camera, renderer } from "./three-setup";
 import { showControls, hideControls } from "../controls/off-canvas-controls";
 import { updatePlanetListTable } from "./system-info-menu";
 
@@ -58,7 +52,6 @@ const raycasterInit = () => {
       for (let p of planetsArray) {
         if (p.uuid === intersectedObject.uuid) {
           console.log(`Selected ${p.name}`);
-          setIsCameraHelio(false);
           p.cameraFollow = true;
           updatePlanetListTable(planetsArray);
           const index = planetsArray.indexOf(p);

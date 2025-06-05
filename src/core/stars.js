@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { camera, scene } from "./three-setup";
 
 const generateStars = (scene, geometry, material) => {
   const star = new THREE.Mesh(geometry, material);
@@ -25,4 +26,4 @@ const stars = (scene, camera) => {
     });
 };
 
-export { stars, generateStars };
+stars(scene, camera);

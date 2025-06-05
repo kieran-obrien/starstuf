@@ -1,8 +1,6 @@
 import "./style.css";
 
-import * as THREE from "three";
-
-import { stars } from "./core/stars.js";
+import "./core/stars.js";
 
 import {
   ambientLight,
@@ -11,7 +9,7 @@ import {
   gridHelper,
 } from "./core/light-grid-helpers.js";
 
-import { getPauseButton, getIcons } from "./controls/pause-controls.js";
+import "./controls/pause-controls.js";
 
 import {
   raycasterInit,
@@ -55,9 +53,8 @@ let planetsArray = [];
 let sun;
 let planetCount = 0;
 let isPaused = false;
-let isCameraHelio = true;
 
-// Add planet functionality
+//! - LEFT TO REFACTOR
 function handlePlanets(planets) {
   // *TODO FUTURE WORK - EDIT THESE FUNCTIONS OUT OF GLOBAL SCOPE
   // Update planet size
@@ -115,61 +112,10 @@ function handlePlanets(planets) {
   }
 }
 
-// Arrow orbit effect
-const arrow = () => {
-  const dir = planetsArray[0].mesh.position.clone();
-  dir.applyAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI / 2);
-  //normalize the direction vector (convert to vector of length 1)
-  dir.normalize();
-
-  const origin = planetsArray[0].mesh.position.clone();
-  const length = 2;
-  const hex = 0xffff00;
-  const arrowHelper = new THREE.ArrowHelper(dir, origin, length, hex, 0, 0);
-  scene.add(arrowHelper);
-  setTimeout(() => scene.remove(arrowHelper), 20000);
-};
-
-// Generate stars for background scene
-stars(scene, camera);
-
 // Pause and play functionality
 const setPaused = (value) => {
   isPaused = value;
 };
-getPauseButton();
-getIcons();
-
-// Camera Focus Functionality
-const setIsCameraHelio = (value) => {
-  isCameraHelio = value;
-};
-
-function setToHelioCameraMode() {
-  isCameraHelio = true;
-  for (let p of planetsArray) {
-    p.cameraFollow = false;
-  }
-  updatePlanetListTable(planetsArray);
-  camera.position.set(0, 0, 150);
-  camera.lookAt(0, 0, 0);
-}
-const helioButton = document.getElementById("helio-button");
-helioButton.addEventListener("click", setToHelioCameraMode);
-
-//! MAIN RUNNING OF APP
-function animate() {
-  //arrow(); // Arrow orbit effect
-  handlePlanets(planetsArray); // Handle planet controls
-  //updatePlanetListTable(planetsArray);
-  if (!isPaused) updatePlanetOrbitPosition(planetsArray, sun);
-  updateRaycastSelectPlanetColor();
-  controls.update();
-  isSetToPlanetCameraMode();
-  updatePlanetPreviewScene();
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
-}
 
 function updatePlanetPreviewScene() {
   previewScene.children = previewScene.children.filter((child) => {
@@ -193,7 +139,9 @@ function updatePlanetPreviewScene() {
   }
   previewRenderer.render(previewScene, camera2);
 }
+//!
 
+//! MAIN RUNNING OF APP
 async function initApp() {
   raycasterInit();
   initImgTextureMenu(planetImages); // Init texture select menu to "hospitable" planetImages
@@ -203,6 +151,17 @@ async function initApp() {
   setTimeout(() => {
     hideLoadingScreen(); // Call this after loading
   }, 1000); // Timeout is for testing atm
+}
+
+function animate() {
+  handlePlanets(planetsArray); // Handle planet controls
+  if (!isPaused) updatePlanetOrbitPosition(planetsArray, sun);
+  updateRaycastSelectPlanetColor();
+  controls.update();
+  isSetToPlanetCameraMode();
+  updatePlanetPreviewScene();
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
 }
 
 (async () => {
@@ -216,5 +175,4 @@ async function initApp() {
 
 export { planetsArray };
 export { isPaused, setPaused };
-export { scene, previewScene, camera, renderer };
-export { isCameraHelio, setIsCameraHelio };
+// export { scene, previewScene, camera, renderer }; Don't think required anymore

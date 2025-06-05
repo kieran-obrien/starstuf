@@ -39,4 +39,7 @@ const getIcons = () => {
   });
 };
 
-export { pausePlay, getPauseButton, getIcons };
+getIcons();
+getPauseButton();
+
+export { pausePlay };
