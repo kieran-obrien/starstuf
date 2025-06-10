@@ -1,11 +1,11 @@
-const planetCountRangeInput = document.getElementById("planet-count");
 import { planetsArray } from "../main";
 
+const planetCountRangeInput = document.getElementById("planet-count");
 planetCountRangeInput.addEventListener("change", () => {
-  updatePlanetListTable(planetsArray);
+  updateSystemTable(planetsArray);
 });
 
-const updatePlanetListTable = () => {
+const updateSystemTable = () => {
   for (let i = 1; i < planetsArray.length + 1; i++) {
     let planetListTableRow = document.getElementById(
       `planets-list-table-r${i}`
@@ -27,4 +27,4 @@ const updatePlanetListTable = () => {
   }
 };
 
-export { planetCountRangeInput, updatePlanetListTable };
+export { updateSystemTable };

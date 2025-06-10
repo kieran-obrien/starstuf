@@ -1,7 +1,7 @@
 import { planetsArray } from "../main";
 import planetMaterials from "../planets/planet-material-factory";
 import updateTextureControls from "./texture-selector-controls";
-import { updatePlanetListTable } from "../core/system-info-menu";
+import { updatePlanetListTable } from "../system-menu/system-table";
 
 let currentControlPlanet;
 

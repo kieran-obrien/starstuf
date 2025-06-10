@@ -1,4 +1,4 @@
-import { previewScene, previewRenderer, camera2 } from "./three-setup";
+import { previewScene, previewRenderer, camera2 } from "../core/three-setup";
 import { planetsArray } from "../main";
 
 export default function updatePlanetPreviewScene() {

@@ -12,17 +12,14 @@ const generateStars = (scene, geometry, material) => {
   return star;
 };
 
-// Generate random star effect
 const stars = (scene, camera) => {
-  // Define the star geometry and material once
   const geometryStar = new THREE.SphereGeometry(0.8, 24, 24);
   const materialStar = new THREE.MeshStandardMaterial({ color: 0xffffff });
-  // Enable seperate layers (for stars)
   camera.layers.enable(1);
   Array(1000)
     .fill()
     .forEach(() => {
-      generateStars(scene, geometryStar, materialStar); // Set star amount
+      generateStars(scene, geometryStar, materialStar);
     });
 };
 

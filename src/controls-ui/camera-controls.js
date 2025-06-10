@@ -1,8 +1,8 @@
 import { planetsArray } from "../main";
 import { camera, renderer } from "../core/three-setup";
 import { MapControls } from "three/examples/jsm/controls/MapControls.js";
-import { hideControls } from "./off-canvas-controls";
-import { updatePlanetListTable } from "../core/system-info-menu";
+import { hideControls } from "../planet-menu/off-canvas-controls";
+import { updatePlanetListTable } from "../system-menu/system-table";
 
 const initCameraControls = () => {
   // const controls = new OrbitControls(camera, renderer.domElement); Alternative controls
@@ -16,7 +16,6 @@ const initCameraControls = () => {
 const isSetToPlanetCameraMode = () => {
   for (let p of planetsArray) {
     if (p.cameraFollow) {
-      // console.log("Camera following planet");
       camera.lookAt(p.mesh.position);
     }
   }

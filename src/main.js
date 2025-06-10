@@ -1,23 +1,25 @@
 import "./style.css";
-import "./core/light-grid-helpers.js";
-import { updatePlanetOrbitPosition } from "./core/planets.js";
+import "./core/light-setup.js";
+import {
+  updatePlanetOrbitPosition,
+  updatePlanetStats,
+} from "./planets/planet-updates.js";
 import { scene, camera, renderer } from "./core/three-setup.js";
 import "./core/stars.js";
 import {
   isSetToPlanetCameraMode,
   controls,
-} from "./controls/camera-controls.js";
+} from "./controls-ui/camera-controls.js";
 import {
   raycasterInit,
   updateRaycastSelectPlanetColor,
 } from "./core/raycaster.js";
 import { hideLoadingScreen } from "./core/texture-img-loader.js";
-import { updatePlanetListTable } from "./core/system-info-menu.js";
+import { updateSystemTable } from "./system-menu/system-table.js";
 import createPlanets from "./planets/planet-obj-factory.js";
-import "./controls/icon-listeners.js";
-import updatePlanetPreviewScene from "./core/preview-scene.js";
-import handlePlanets from "./planets/planet-updates.js";
-import { isPaused } from "./controls/pause-controls.js";
+import "./controls-ui/icon-listeners.js";
+import updatePlanetPreviewScene from "./planet-menu/preview-scene.js";
+import { isPaused } from "./controls-ui/pause-controls.js";
 
 let planetsArray;
 let sun;
@@ -25,14 +27,14 @@ let sun;
 async function initApp() {
   raycasterInit();
   [planetsArray, sun] = await createPlanets();
-  updatePlanetListTable(planetsArray);
+  updateSystemTable(planetsArray);
   setTimeout(() => {
     hideLoadingScreen();
   }, 500);
 }
 
 function animate() {
-  handlePlanets(planetsArray);
+  updatePlanetStats(planetsArray);
   if (!isPaused) updatePlanetOrbitPosition(planetsArray, sun);
   updateRaycastSelectPlanetColor();
   controls.update();

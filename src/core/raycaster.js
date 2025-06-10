@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { planetsArray } from "../main";
 import { scene, camera, renderer } from "./three-setup";
-import { showControls, hideControls } from "../controls/off-canvas-controls";
-import { updatePlanetListTable } from "./system-info-menu";
+import { showControls, hideControls } from "../planet-menu/off-canvas-controls";
+import { updatePlanetListTable } from "../system-menu/system-table";
 
 const raycaster = new THREE.Raycaster();
 
