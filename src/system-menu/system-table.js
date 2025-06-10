@@ -14,9 +14,7 @@ const updateSystemTable = () => {
       console.warn("Couldn't find #planets-list-table-r1 in the DOM");
       return;
     }
-    console.log("updating...");
     planetListTableRow.children[1].textContent = planetsArray[i - 1].name;
-    console.log(planetsArray[i - 1].name);
     planetListTableRow.children[2].textContent = planetsArray[i - 1].size;
     const isInOrbit = planetsArray[i - 1].inOrbit ? "✓" : "✗";
     planetListTableRow.children[3].textContent = isInOrbit;

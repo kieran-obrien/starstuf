@@ -30,7 +30,6 @@ async function createPlanets() {
   const sunMaterial = new THREE.MeshPhongMaterial({ map: sunTexture });
   const sun = new THREE.Mesh(geometrySun, sunMaterial);
   sun.name = "sun";
-  console.log(sun, "HELLO");
 
   // Add the initial sun
   scene.add(sun);

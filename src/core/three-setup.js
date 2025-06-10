@@ -32,7 +32,7 @@ const initThreeJsAssets = () => {
     0.1,
     1000
   ); // field of view, aspect ratio, near, far
-  console.log(canvas.clientWidth, canvas.clientHeight);
+
   previewRenderer.setSize(canvas.clientWidth, canvas.clientHeight);
   previewRenderer.setPixelRatio(window.devicePixelRatio);
 
@@ -47,10 +47,10 @@ const initThreeJsAssets = () => {
   // Init THREE imgloader/textureloader
   const imgLoader = new THREE.ImageLoader();
   const textureLoader = new THREE.TextureLoader();
-  console.log(camera);
 
   // Make app dynamically resizable
-  window.addEventListener("resize", onWindowResize, false);
+  window.addEventListener("resize", onWindowResize);
+  window.addEventListener("orientationchange", onWindowResize);
   function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -69,6 +69,7 @@ const initThreeJsAssets = () => {
     textureLoader,
   ];
 };
+
 
 // Init threejs assets
 const [
