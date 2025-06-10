@@ -1,8 +1,10 @@
 import "./style.css";
 import "./core/light-setup.js";
 import {
+  updatePlanetDistanceWhilePaused,
   updatePlanetOrbitPosition,
   updatePlanetStats,
+  updatePlanetsInScene,
 } from "./planets/planet-updates.js";
 import { scene, camera, renderer } from "./core/three-setup.js";
 import "./core/stars.js";
@@ -36,6 +38,8 @@ async function initApp() {
 function animate() {
   updatePlanetStats(planetsArray);
   if (!isPaused) updatePlanetOrbitPosition(planetsArray, sun);
+  else updatePlanetDistanceWhilePaused(planetsArray);
+  updatePlanetsInScene(planetsArray);
   updateRaycastSelectPlanetColor();
   controls.update();
   isSetToPlanetCameraMode();

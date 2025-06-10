@@ -1,22 +1,18 @@
 import { scene } from "../core/three-setup";
-import { updatePlanetListTable } from "../system-menu/system-table";
+import { updateSystemTable } from "../system-menu/system-table";
 
 const updatePlanetStats = (planets) => {
-  let planetCount = 0;
   // *TODO FUTURE WORK - EDIT THESE FUNCTIONS OUT OF GLOBAL SCOPE
-  // Update planet size
   const updatePlanetSize = (index) => {
-    console.log(index);
-    updatePlanetListTable(planets);
+    updateSystemTable(planets);
     const size = document.getElementById(`planet-size-${index}`).value;
-    console.log(size);
     planets[index].updatePlanetSize(size);
   };
   window.updatePlanetSize = updatePlanetSize;
 
   // Update planet orbit speed
   const updatePlanetSpeed = (index) => {
-    updatePlanetListTable(planets);
+    updateSystemTable(planets);
     const speed = document.getElementById(`orbit-speed-${index}`).value;
     planets[index].updatePlanetSpeed(speed);
   };
@@ -37,10 +33,10 @@ const updatePlanetStats = (planets) => {
     scene.add(planets[index].orbitPath);
   };
   window.updatePlanetDistance = updatePlanetDistance;
-  // *TODO -------------------------------------------------------*/
+};
 
-  // This handles showing/removing planets from scene
-  planetCount = document.getElementById("planet-count").value;
+const updatePlanetsInScene = (planets) => {
+  let planetCount = document.getElementById("planet-count").value;
   for (let i = 0; i < planets.length; i++) {
     if (scene.children.includes(planets[i].mesh)) {
       planets[i].inOrbit = false;
@@ -79,4 +75,19 @@ const updatePlanetOrbitPosition = (planetsArray, sun) => {
   sun.rotation.y += 0.0005; // Sun rotation
 };
 
-export { updatePlanetStats, updatePlanetOrbitPosition };
+const updatePlanetDistanceWhilePaused = (planetsArray) => {
+  planetsArray.forEach((p) => {
+    p.mesh.position.set(
+      Math.cos(p.currentAngle) * p.distance,
+      0,
+      Math.sin(p.currentAngle) * p.distance
+    );
+  });
+};
+
+export {
+  updatePlanetStats,
+  updatePlanetOrbitPosition,
+  updatePlanetsInScene,
+  updatePlanetDistanceWhilePaused,
+};

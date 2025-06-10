@@ -1,7 +1,7 @@
 import { planetsArray } from "../main";
 import planetMaterials from "../planets/planet-material-factory";
 import updateTextureControls from "./texture-selector-controls";
-import { updatePlanetListTable } from "../system-menu/system-table";
+import { updateSystemTable } from "../system-menu/system-table";
 
 let currentControlPlanet;
 
@@ -72,7 +72,7 @@ function showControls(planet, i) {
   planetNameInput.placeholder = planet.name;
   planetNameInput.addEventListener("input", () => {
     currentControlPlanet.name = planetNameInput.value;
-    updatePlanetListTable();
+    updateSystemTable();
   });
   bsOffcanvas.show();
 }

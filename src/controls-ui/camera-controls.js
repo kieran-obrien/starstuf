@@ -2,7 +2,7 @@ import { planetsArray } from "../main";
 import { camera, renderer } from "../core/three-setup";
 import { MapControls } from "three/examples/jsm/controls/MapControls.js";
 import { hideControls } from "../planet-menu/off-canvas-controls";
-import { updatePlanetListTable } from "../system-menu/system-table";
+import { updateSystemTable } from "../system-menu/system-table";
 
 const initCameraControls = () => {
   // const controls = new OrbitControls(camera, renderer.domElement); Alternative controls
@@ -25,7 +25,7 @@ function setToHelioCameraMode() {
   for (let p of planetsArray) {
     p.cameraFollow = false;
   }
-  updatePlanetListTable(planetsArray);
+  updateSystemTable(planetsArray);
   hideControls();
   camera.position.set(0, 0, 150);
   camera.lookAt(0, 0, 0);
@@ -37,7 +37,7 @@ function setToOrbitCameraMode() {
   for (let p of planetsArray) {
     p.cameraFollow = false;
   }
-  updatePlanetListTable(planetsArray);
+  updateSystemTable(planetsArray);
   hideControls();
   camera.position.set(0, 600, 0);
   camera.lookAt(0, 0, 0);

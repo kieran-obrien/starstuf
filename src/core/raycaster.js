@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { planetsArray } from "../main";
 import { scene, camera, renderer } from "./three-setup";
 import { showControls, hideControls } from "../planet-menu/off-canvas-controls";
-import { updatePlanetListTable } from "../system-menu/system-table";
+import { updateSystemTable } from "../system-menu/system-table";
 
 const raycaster = new THREE.Raycaster();
 
@@ -53,7 +53,7 @@ const raycasterInit = () => {
         if (p.uuid === intersectedObject.uuid) {
           console.log(`Selected ${p.name}`);
           p.cameraFollow = true;
-          updatePlanetListTable(planetsArray);
+          updateSystemTable(planetsArray);
           const index = planetsArray.indexOf(p);
           p.controlsSelected = true;
           showControls(p, index);
@@ -64,7 +64,7 @@ const raycasterInit = () => {
       }
       if (intersectedObject.name === "sun") {
         hideControls();
-        updatePlanetListTable(planetsArray);
+        updateSystemTable(planetsArray);
       }
     }
   }
