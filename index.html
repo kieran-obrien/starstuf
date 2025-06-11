@@ -42,8 +42,8 @@
               class="ri-menu-5-line icon"
               id="system-menu-button"
               data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasList"
-              aria-controls="offcanvasList"
+              data-bs-target="#offcanvas-system-menu"
+              aria-controls="offcanvas-system-menu"
             ></i>
           </div>
           <div id="pause-button-div">
@@ -93,14 +93,14 @@
       </div>
     </div>
     <canvas id="bg"></canvas>
-    <div id="offcanvas-list">
+    <div id="offcanvas-system">
       <div
         class="offcanvas offcanvas-start text-bg-dark"
         style="--bs-bg-opacity: 0.5"
         data-bs-scroll="true"
         data-bs-backdrop="false"
         tabindex="-1"
-        id="offcanvasList"
+        id="offcanvas-system-menu"
         aria-labelledby="offcanvasListLabel"
       >
         <div class="offcanvas-header">
@@ -126,7 +126,7 @@
                   <tr>
                     <th scope="col">Name</th>
                     <th scope="col">In-System</th>
-                    <th scope="col">Cam-Focus</th>
+                    <th scope="col">Focus</th>
                     <th scope="col">Settings</th>
                   </tr>
                 </thead>
@@ -298,18 +298,18 @@
       </div>
     </div>
 
-    <div id="offcanvas">
+    <div id="offcanvas-planet">
       <div
         class="offcanvas offcanvas-end text-bg-dark"
         style="--bs-bg-opacity: 0.5"
         data-bs-scroll="true"
         data-bs-backdrop="false"
         tabindex="-1"
-        id="offcanvasExample"
-        aria-labelledby="offcanvasExampleLabel"
+        id="offcanvas-planet-menu"
+        aria-labelledby="offcanvas-planet-menu"
       >
         <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="offcanvasTitle">Helio</h5>
+          <h5 class="offcanvas-title" id="offcanvas-title">Helio</h5>
           <button
             type="button"
             class="btn-close btn-close-white"

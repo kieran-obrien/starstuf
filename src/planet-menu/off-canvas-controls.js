@@ -55,9 +55,9 @@ function updatePlanetControlsHTML(i, planetsArray) {
 function showControls(planet, i) {
   currentControlPlanet = planet;
   updateTextureControls(planet.textureCode, planet);
-  const header = document.getElementById("offcanvasTitle");
+  const header = document.getElementById("offcanvas-title");
   header.innerHTML = `${planet.name}`;
-  const offcanvasElement = document.getElementById("offcanvasExample");
+  const offcanvasElement = document.getElementById("offcanvas-planet-menu");
   const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
   const offCanvasBody = document.getElementById("offcanvas-body");
   if (offCanvasBody.lastElementChild.nodeName === "FORM") {
@@ -87,11 +87,9 @@ const updatePlanetTexture = (index) => {
 
 const hideControls = () => {
   console.log("Attempting to hide offcanvas");
-  const offcanvasElement = document.getElementById("offcanvasExample");
+  const offcanvasElement = document.getElementById("offcanvas-planet-menu");
+  const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
   if (offcanvasElement) {
-    const bsOffcanvas =
-      bootstrap.Offcanvas.getInstance(offcanvasElement) ||
-      new bootstrap.Offcanvas(offcanvasElement);
     bsOffcanvas.hide();
   }
 };
