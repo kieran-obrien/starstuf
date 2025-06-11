@@ -25,6 +25,7 @@ import createPlanets from "./planets/planet-obj-factory.js";
 import "./controls-ui/icon-listeners.js";
 import updatePlanetPreviewScene from "./planet-menu/preview-scene.js";
 import { isPaused } from "./controls-ui/pause-controls.js";
+import adjustOffcanvasPosition from "./controls-ui/adjust-offcanvas-position.js";
 
 let planetsArray;
 let sun;
@@ -33,6 +34,7 @@ async function initApp() {
   raycasterInit();
   [planetsArray, sun] = await createPlanets();
   updateSystemTable(planetsArray);
+  adjustOffcanvasPosition();
   addSystemMenuListeners();
   setTimeout(() => {
     hideLoadingScreen();

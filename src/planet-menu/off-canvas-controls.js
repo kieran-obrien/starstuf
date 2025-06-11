@@ -2,6 +2,7 @@ import { planetsArray } from "../main";
 import planetMaterials from "../planets/planet-material-factory";
 import updateTextureControls from "./texture-selector-controls";
 import { updateSystemTable } from "../system-menu/system-table";
+import adjustOffcanvasPosition from "../controls-ui/adjust-offcanvas-position";
 
 let currentControlPlanet;
 
@@ -53,27 +54,21 @@ function updatePlanetControlsHTML(i, planetsArray) {
 }
 
 function showControls(planet, i) {
+  adjustOffcanvasPosition();
   currentControlPlanet = planet;
   updateTextureControls(planet.textureCode, planet);
-  const header = document.getElementById("offcanvas-title");
-  header.innerHTML = `${planet.name}`;
+  updatePlanetOffcanvasHeader(planet);
   const offcanvasElement = document.getElementById("offcanvas-planet-menu");
   const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
   const offCanvasBody = document.getElementById("offcanvas-body");
   if (offCanvasBody.lastElementChild.nodeName === "FORM") {
     offCanvasBody.removeChild(offCanvasBody.lastElementChild);
   }
-  const planetControlsHTML = updatePlanetControlsHTML(i, planetsArray);
   const form = document.createElement("form");
-  form.innerHTML = planetControlsHTML;
+  form.innerHTML = updatePlanetControlsHTML(i, planetsArray);
   offCanvasBody.appendChild(form);
-  const planetNameInput = document.getElementById("planet-name-input");
-  planetNameInput.value = "";
-  planetNameInput.placeholder = planet.name;
-  planetNameInput.addEventListener("input", () => {
-    currentControlPlanet.name = planetNameInput.value;
-    updateSystemTable();
-  });
+  updatePlanetNameInput(planet);
+  hideSystemMenu();
   bsOffcanvas.show();
 }
 
@@ -83,6 +78,31 @@ const updatePlanetTexture = (index) => {
   p.textureCode = index + 1;
   planetMaterials[index].map.needsUpdate = true;
   console.log(`Updated planet texture: ${p.textureCode}`);
+};
+
+const updatePlanetOffcanvasHeader = (planet) => {
+  const header = document.getElementById("offcanvas-title");
+  header.innerHTML = `${planet.name}`;
+};
+
+const updatePlanetNameInput = (planet) => {
+  const planetNameInput = document.getElementById("planet-name-input");
+  planetNameInput.value = "";
+  planetNameInput.placeholder = planet.name;
+  planetNameInput.addEventListener("input", () => {
+    currentControlPlanet.name = planetNameInput.value;
+    updateSystemTable();
+  });
+};
+
+const hideSystemMenu = () => {
+  const systemMenuoffcanvasElement = document.getElementById(
+    "offcanvas-system-menu"
+  );
+  const systemMenuInstance = bootstrap.Offcanvas.getInstance(
+    systemMenuoffcanvasElement
+  );
+  if (systemMenuInstance) systemMenuInstance.hide();
 };
 
 const hideControls = () => {

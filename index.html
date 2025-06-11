@@ -95,7 +95,7 @@
     <canvas id="bg"></canvas>
     <div id="offcanvas-system">
       <div
-        class="offcanvas offcanvas-start text-bg-dark"
+        class="offcanvas offcanvas-start offcanvas-xs-bottom text-bg-dark"
         style="--bs-bg-opacity: 0.5"
         data-bs-scroll="true"
         data-bs-backdrop="false"
@@ -138,7 +138,13 @@
                       <i id="1" class="ri-video-on-fill icon system-icon"></i>
                     </td>
                     <td>
-                      <i id="1" class="ri-settings-5-fill icon system-icon"></i>
+                      <i
+                        id="1"
+                        class="ri-settings-5-fill icon system-icon"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvas-system-menu"
+                        aria-controls="offcanvas-system-menu"
+                      ></i>
                     </td>
                   </tr>
                   <tr id="planets-list-table-r2">
@@ -300,7 +306,7 @@
 
     <div id="offcanvas-planet">
       <div
-        class="offcanvas offcanvas-end text-bg-dark"
+        class="offcanvas offcanvas-start text-bg-dark"
         style="--bs-bg-opacity: 0.5"
         data-bs-scroll="true"
         data-bs-backdrop="false"
@@ -310,14 +316,22 @@
       >
         <div class="offcanvas-header">
           <h5 class="offcanvas-title" id="offcanvas-title">Helio</h5>
-          <button
-            type="button"
-            class="btn-close btn-close-white"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"
-          ></button>
+          <div class="planet-menu-icons">
+            <i
+              class="ri-menu-5-line icon"
+              id="system-menu-button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvas-system-menu"
+              aria-controls="offcanvas-system-menu"
+            ></i>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </div>
         </div>
-        <hr />
         <div class="offcanvas-body" id="offcanvas-body">
           <div id="planet-preview">
             <canvas id="planet-preview-canvas"></canvas>
