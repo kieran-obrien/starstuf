@@ -18,7 +18,7 @@ import {
 } from "./core/raycaster.js";
 import { hideLoadingScreen } from "./core/texture-img-loader.js";
 import {
-  addCameraButtonListeners,
+  addSystemMenuListeners,
   updateSystemTable,
 } from "./system-menu/system-table.js";
 import createPlanets from "./planets/planet-obj-factory.js";
@@ -33,7 +33,7 @@ async function initApp() {
   raycasterInit();
   [planetsArray, sun] = await createPlanets();
   updateSystemTable(planetsArray);
-  addCameraButtonListeners();
+  addSystemMenuListeners();
   setTimeout(() => {
     hideLoadingScreen();
   }, 500);
