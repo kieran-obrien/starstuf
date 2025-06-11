@@ -20,7 +20,7 @@ async function createPlanets() {
     planet.name = `Planet ${i}`;
     planet.distance = distanceFromLast;
     planet.minmaxdist = [distanceFromLast - 90, distanceFromLast + 90];
-    planet.index = i + 1;
+    planet.index = i;
     planet.orbitPath = createOrbitCircle(planet.distance);
     distanceFromLast += 180;
   }

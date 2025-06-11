@@ -17,7 +17,10 @@ import {
   updateRaycastSelectPlanetColor,
 } from "./core/raycaster.js";
 import { hideLoadingScreen } from "./core/texture-img-loader.js";
-import { updateSystemTable } from "./system-menu/system-table.js";
+import {
+  addCameraButtonListeners,
+  updateSystemTable,
+} from "./system-menu/system-table.js";
 import createPlanets from "./planets/planet-obj-factory.js";
 import "./controls-ui/icon-listeners.js";
 import updatePlanetPreviewScene from "./planet-menu/preview-scene.js";
@@ -30,6 +33,7 @@ async function initApp() {
   raycasterInit();
   [planetsArray, sun] = await createPlanets();
   updateSystemTable(planetsArray);
+  addCameraButtonListeners();
   setTimeout(() => {
     hideLoadingScreen();
   }, 500);
