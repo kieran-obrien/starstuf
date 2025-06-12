@@ -77,10 +77,10 @@ const loadingSpinner = document.getElementById("loader");
 
 function hideLoadingScreen() {
   const loadingScreen = document.getElementById("loading-screen");
-  loadingScreen.style.opacity = "0"; // Fade out effect
+  loadingScreen.style.opacity = "0";
   setTimeout(() => {
-    loadingScreen.style.display = "none"; // Remove from view
-  }, 500); // Wait for fade-out animation
+    loadingScreen.style.display = "none";
+  }, 800);
 }
 
 function showStartButton() {

@@ -34,24 +34,6 @@ body {
 .btn {
   z-index: 1;
 }
-.container-h1 {
-  display: flex;
-  justify-content: center;
-  z-index: 1;
-  height: 65px;
-}
-
-h1 {
-  font-size: 4rem;
-  font-weight: 300;
-  align-items: end;
-  font-family: Sansation;
-  height: 65px;
-}
-h1,
-form {
-  color: white;
-}
 
 #user-interface {
   z-index: 1;
@@ -125,6 +107,10 @@ h5 {
   overflow-wrap: break-word;
   white-space: normal;
   max-width: 90%;
+}
+
+h6 {
+  font-family: Sansation;
 }
 
 .container-md {
@@ -234,16 +220,18 @@ hr {
   flex-direction: column;
   font-size: 24px;
   z-index: 9999;
+  font-family: Sansation;
+  opacity: 1;
+  transition: opacity 0.8s ease;
 }
 
 .loader {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border: 5px solid white;
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
-  margin-bottom: 10px;
 }
 
 .mobile-offcanvas {
@@ -251,13 +239,47 @@ hr {
   border-radius: 0.8rem;
 }
 
-.load-quote {
-  position: fixed;
+#start-button {
+  text-align: center;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
 }
 
 .loading-elements {
-  position: fixed;
-  bottom: 20rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.load-quote {
+  margin: 1rem;
+  text-align: center;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  display: flex;
+  align-items: center; /* vertically center children */
+  gap: 0.5rem; /* optional spacing between icon and text */
+}
+
+.help-icon {
+  margin: 10px;
+  font-size: 1.75rem;
+  font-weight: lighter;
+}
+
+li p {
+  height: 100%;
+  padding: 4;
+  display: inline;
+  font-size: 1.2rem;
+  margin: 0;
+  font-family: Sansation;
 }
 
 @keyframes spin {
