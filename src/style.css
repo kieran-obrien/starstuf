@@ -3,12 +3,14 @@ html {
   height: 100%;
   width: 100%;
   font-family: Sansation;
+  overflow: hidden;
 }
 
 body {
   margin: 0px;
   min-height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 #bg {
@@ -67,6 +69,11 @@ form {
 
 #main-menu-button {
   z-index: 1;
+}
+
+.rotate {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
 }
 
 #offcanvas {

@@ -26,6 +26,7 @@ import "./controls-ui/icon-listeners.js";
 import updatePlanetPreviewScene from "./planet-menu/preview-scene.js";
 import { isPaused } from "./controls-ui/pause-controls.js";
 import adjustOffcanvasPosition from "./controls-ui/adjust-offcanvas-position.js";
+import "./controls-ui/collapse-button.js";
 
 let planetsArray;
 let sun;

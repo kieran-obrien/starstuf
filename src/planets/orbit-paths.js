@@ -20,6 +20,7 @@ function createOrbitCircle(radius, segments = 128, color = 0xffffff) {
   });
 
   const orbit = new THREE.LineLoop(orbitGeometry, orbitMaterial);
+  orbit.layers.set(1);
   return orbit;
 }
 
