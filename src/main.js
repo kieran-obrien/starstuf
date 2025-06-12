@@ -16,7 +16,7 @@ import {
   raycasterInit,
   updateRaycastSelectPlanetColor,
 } from "./core/raycaster.js";
-import { hideLoadingScreen } from "./core/texture-img-loader.js";
+import { showStartButton } from "./core/texture-img-loader.js";
 import {
   addSystemMenuListeners,
   updateSystemTable,
@@ -38,8 +38,8 @@ async function initApp() {
   adjustOffcanvasPosition();
   addSystemMenuListeners();
   setTimeout(() => {
-    hideLoadingScreen();
-  }, 500);
+    showStartButton();
+  }, 2000);
 }
 
 function animate() {

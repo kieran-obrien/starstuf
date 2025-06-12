@@ -70,6 +70,11 @@ function initImgTextureMenu(planetImages) {
   }
 }
 
+const startButton = document.getElementById("start-button");
+startButton.style.display = "none";
+startButton.addEventListener("click", hideLoadingScreen);
+const loadingSpinner = document.getElementById("loader");
+
 function hideLoadingScreen() {
   const loadingScreen = document.getElementById("loading-screen");
   loadingScreen.style.opacity = "0"; // Fade out effect
@@ -78,7 +83,12 @@ function hideLoadingScreen() {
   }, 500); // Wait for fade-out animation
 }
 
+function showStartButton() {
+  loadingSpinner.style.display = "none";
+  startButton.style.display = "block";
+}
+
 const { planetImages, planetTextures } = await loadTextures();
 initImgTextureMenu(planetImages);
 
-export { hideLoadingScreen, planetTextures, planetImages };
+export { showStartButton, planetTextures, planetImages };
