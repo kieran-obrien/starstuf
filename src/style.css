@@ -3,14 +3,15 @@ html {
   height: 100%;
   width: 100%;
   font-family: Sansation;
-  overflow: hidden;
+  overflow-y: hidden;
+  position: fixed; /* Optional, sometimes helps */
 }
 
 body {
   margin: 0px;
   min-height: 100%;
   width: 100%;
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 #bg {
@@ -62,6 +63,10 @@ form {
   display: flex;
 }
 
+table {
+  text-align: center;
+}
+
 .main-menu {
   display: flex;
   flex-direction: column;
@@ -69,6 +74,9 @@ form {
 
 #main-menu-button {
   z-index: 1;
+  margin: 12px;
+  font-size: 2.5em;
+  font-weight: lighter;
 }
 
 .rotate {
@@ -89,7 +97,7 @@ form {
 
 .offcanvas-body {
   flex-grow: 0;
-  padding-top: 0;
+  padding-top: 10;
 }
 
 .offcanvas-header {
@@ -231,6 +239,11 @@ hr {
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 10px;
+}
+
+.mobile-offcanvas {
+  border-top: 0.1rem solid rgb(147, 147, 147) !important;
+  border-radius: 0.8rem;
 }
 
 @keyframes spin {

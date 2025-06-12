@@ -8,18 +8,20 @@ export default function adjustOffcanvasPosition() {
     "offcanvas-start",
     "offcanvas-end",
     "offcanvas-top",
-    "offcanvas-bottom"
+    "offcanvas-bottom",
+    "mobile-offcanvas"
   );
   systemMenu.classList.remove(
     "offcanvas-start",
     "offcanvas-end",
     "offcanvas-top",
-    "offcanvas-bottom"
+    "offcanvas-bottom",
+    "mobile-offcanvas"
   );
   if (window.innerWidth <= 768) {
     // For mobile: show from bottom
-    planetMenu.classList.add("offcanvas-bottom");
-    systemMenu.classList.add("offcanvas-bottom");
+    planetMenu.classList.add("offcanvas-bottom", "mobile-offcanvas");
+    systemMenu.classList.add("offcanvas-bottom", "mobile-offcanvas");
   } else {
     // For desktop: show from right
     planetMenu.classList.add("offcanvas-start");

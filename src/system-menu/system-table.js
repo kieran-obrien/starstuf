@@ -49,10 +49,12 @@ const updateSystemTable = () => {
       return;
     }
     planetListTableRow.children[0].textContent = planetsArray[i - 1].name;
-    const isInOrbit = planetsArray[i - 1].inOrbit ? "✓" : "✗";
-    planetListTableRow.children[1].textContent = isInOrbit;
+    const isInOrbitClass = planetsArray[i - 1].inOrbit
+      ? "ri-checkbox-circle-fill icon system-icon text-success"
+      : "ri-close-circle-fill icon system-icon text-danger";
+    planetListTableRow.children[1].children[0].className = isInOrbitClass;
     const cameraFocusIconClass = planetsArray[i - 1].cameraFollow
-      ? "ri-video-on-fill icon system-icon"
+      ? "ri-video-on-fill icon system-icon text-primary"
       : "ri-video-off-fill icon system-icon";
     planetListTableRow.children[2].children[0].className = cameraFocusIconClass;
   }
