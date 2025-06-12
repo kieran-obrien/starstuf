@@ -34,66 +34,75 @@
     <div id="loading-screen">
       <div class="loader"></div>
     </div>
-    <div class="container">
-      <div id="user-interface">
-        <div id="main-buttons-div">
-          <div id="system-menu-button-div">
-            <i
-              class="ri-menu-5-line icon"
-              id="system-menu-button"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvas-system-menu"
-              aria-controls="offcanvas-system-menu"
-            ></i>
-          </div>
-          <div id="pause-button-div">
-            <i class="ri-pause-large-line icon" id="pause-button"></i>
-          </div>
-          <div id="helio-button-div">
-            <i class="ri-sun-fill icon" id="helio-button"></i>
-          </div>
-          <div id="topdown-button-div">
-            <i class="ri-focus-2-line icon" id="topdown-button"></i>
-          </div>
-          <div id="fullscreen-button-div">
-            <i class="ri-fullscreen-fill icon" id="fullscreen-btn"></i>
-          </div>
-        </div>
-
-        <div id="planet-count-form">
-          <div id="credits-help-section">
-            <div id="credits-button-div">
+    <main class="container">
+      <i
+        id="main-menu-button"
+        class="ri-arrow-down-wide-line icon"
+        data-bs-toggle="collapse"
+        data-bs-target="#user-interface"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+      ></i>
+      <nav id="user-interface" class="collapse">
+        <div class="main-menu">
+          <div id="main-buttons-div">
+            <div id="system-menu-button-div">
               <i
-                class="ri-information-2-fill credits-help-icon"
-                data-bs-toggle="modal"
-                data-bs-target="#credits-modal"
+                class="ri-menu-5-line icon"
+                id="system-menu-button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvas-system-menu"
+                aria-controls="offcanvas-system-menu"
               ></i>
             </div>
-            <div id="help-button-div">
-              <i
-                class="ri-question-fill credits-help-icon"
-                data-bs-toggle="modal"
-                data-bs-target="#help-modal"
-              ></i>
+            <div id="pause-button-div">
+              <i class="ri-pause-large-line icon" id="pause-button"></i>
+            </div>
+            <div id="helio-button-div">
+              <i class="ri-sun-fill icon" id="helio-button"></i>
+            </div>
+            <div id="topdown-button-div">
+              <i class="ri-focus-2-line icon" id="topdown-button"></i>
+            </div>
+            <div id="fullscreen-button-div">
+              <i class="ri-fullscreen-fill icon" id="fullscreen-btn"></i>
             </div>
           </div>
-          <form>
-            <label for="planet-count"></label>
-            <i class="ri-planet-line planet-icon"></i>
-            <input
-              type="range"
-              id="planet-count"
-              name="planet-count"
-              min="0"
-              max="10"
-              value="1"
-            />
-          </form>
+          <div id="planet-count-form">
+            <div id="credits-help-section">
+              <div id="credits-button-div">
+                <i
+                  class="ri-information-2-fill credits-help-icon"
+                  data-bs-toggle="modal"
+                  data-bs-target="#credits-modal"
+                ></i>
+              </div>
+              <div id="help-button-div">
+                <i
+                  class="ri-question-fill credits-help-icon"
+                  data-bs-toggle="modal"
+                  data-bs-target="#help-modal"
+                ></i>
+              </div>
+            </div>
+            <form>
+              <label for="planet-count"></label>
+              <i class="ri-planet-line planet-icon"></i>
+              <input
+                type="range"
+                id="planet-count"
+                name="planet-count"
+                min="0"
+                max="10"
+                value="1"
+              />
+            </form>
+          </div>
         </div>
-      </div>
-    </div>
+      </nav>
+    </main>
     <canvas id="bg"></canvas>
-    <div id="offcanvas-system">
+    <nav id="offcanvas-system">
       <div
         class="offcanvas offcanvas-start offcanvas-xs-bottom text-bg-dark"
         style="--bs-bg-opacity: 0.5"
@@ -302,9 +311,8 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <div id="offcanvas-planet">
+    </nav>
+    <nav id="offcanvas-planet">
       <div
         class="offcanvas offcanvas-start text-bg-dark"
         style="--bs-bg-opacity: 0.5"
@@ -409,7 +417,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </nav>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
