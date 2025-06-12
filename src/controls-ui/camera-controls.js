@@ -26,7 +26,6 @@ function setToHelioCameraMode() {
     p.cameraFollow = false;
   }
   updateSystemTable(planetsArray);
-  hideControls();
   camera.position.set(0, 0, 150);
   camera.lookAt(0, 0, 0);
 }
@@ -38,7 +37,6 @@ function setToOrbitCameraMode() {
     p.cameraFollow = false;
   }
   updateSystemTable(planetsArray);
-  hideControls();
   camera.position.set(0, 600, 0);
   camera.lookAt(0, 0, 0);
 }
