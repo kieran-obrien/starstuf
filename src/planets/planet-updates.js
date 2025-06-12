@@ -28,9 +28,11 @@ const updatePlanetStats = (planets) => {
   // Update planet distance
   const updatePlanetDistance = (index) => {
     const distance = document.getElementById(`planet-distance-${index}`).value;
-    scene.remove(planets[index].orbitPath);
-    planets[index].updatePlanetDistance(distance);
-    scene.add(planets[index].orbitPath);
+    if (planets[index].inOrbit) {
+      scene.remove(planets[index].orbitPath);
+      planets[index].updatePlanetDistance(distance);
+      scene.add(planets[index].orbitPath);
+    } else planets[index].updatePlanetDistance(distance);
   };
   window.updatePlanetDistance = updatePlanetDistance;
 };
