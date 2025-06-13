@@ -294,3 +294,12 @@ li p {
 label {
   font-family: Sansation !important;
 }
+
+.offcanvas-icons {
+  display: flex;
+  align-items: center;
+}
+
+.btn-close {
+  margin-left: 0 !important;
+}

@@ -321,19 +321,21 @@
       >
         <div class="offcanvas-header">
           <h5 class="offcanvas-title" id="offcanvas-title">Helio</h5>
-          <i
-            class="ri-menu-5-line icon"
-            id="system-menu-button"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvas-system-menu"
-            aria-controls="offcanvas-system-menu"
-          ></i>
-          <button
-            type="button"
-            class="btn-close btn-close-white"
-            data-bs-dismiss="offcanvas"
-            aria-label="Close"
-          ></button>
+          <nav class="offcanvas-icons">
+            <i
+              class="ri-menu-5-line icon"
+              id="system-menu-button"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvas-system-menu"
+              aria-controls="offcanvas-system-menu"
+            ></i>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="offcanvas"
+              aria-label="Close"
+            ></button>
+          </nav>
         </div>
         <div class="offcanvas-body" id="offcanvas-body">
           <div id="planet-preview">
@@ -423,7 +425,9 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content bg-dark text-light">
           <div class="modal-header border-0">
-            <h6 class="modal-title display-6" id="staticBackdropLabel">About</h6>
+            <h6 class="modal-title display-6" id="staticBackdropLabel">
+              About
+            </h6>
             <button
               type="button"
               class="btn-close btn-close-white"
