@@ -81,7 +81,6 @@ const updatePlanetDistanceWhilePaused = (planetsArray) => {
 };
 
 export {
-  updatePlanetStats,
   updatePlanetOrbitPosition,
   updatePlanetsInScene,
   updatePlanetDistanceWhilePaused,

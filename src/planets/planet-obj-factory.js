@@ -18,6 +18,7 @@ async function createPlanets() {
     const planet = planetsArray[i - 1];
     planet.mesh.name = `Planet ${i}`;
     planet.name = `Planet ${i}`;
+    planet.defaultName = `Planet ${i}`;
     planet.distance = distanceFromLast;
     planet.minmaxdist = [distanceFromLast - 90, distanceFromLast + 90];
     planet.index = i;

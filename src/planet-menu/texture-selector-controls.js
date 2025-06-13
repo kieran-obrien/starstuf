@@ -1,8 +1,6 @@
 import { planetImages } from "../core/texture-img-loader";
 import { updatePlanetTexture } from "./off-canvas-controls";
-import { currentControlPlanet } from "./off-canvas-controls";
 
-// Planet control texture menu functionality
 let textureOptions = document.querySelectorAll(".texture-option");
 textureOptions = Array.from(textureOptions).map((option) =>
   option.querySelector("button")
@@ -105,17 +103,6 @@ textureImgOptions.forEach((option) => {
   option.addEventListener("mouseup", () => {
     option.style.backgroundColor = "#303030";
   });
-});
-
-const nameInput = document.getElementById("planet-name-input");
-nameInput.addEventListener("input", () => {
-  const offCanvasTitle = document.getElementById("offcanvasTitle");
-  if (nameInput.value === "") {
-    offCanvasTitle.innerHTML = `Planet ${currentControlPlanet.index}`;
-    return;
-  }
-  currentControlPlanet.name = nameInput.value;
-  offCanvasTitle.innerHTML = currentControlPlanet.name;
 });
 
 export default updateTextureControls;

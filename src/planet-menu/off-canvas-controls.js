@@ -58,7 +58,6 @@ function showControls(planet, i) {
   adjustOffcanvasPosition();
   currentControlPlanet = planet;
   updateTextureControls(planet.textureCode, planet);
-  updatePlanetOffcanvasHeader(planet);
   const offcanvasElement = document.getElementById("offcanvas-planet-menu");
   const bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
   const offCanvasBody = document.getElementById("offcanvas-body");
@@ -69,6 +68,7 @@ function showControls(planet, i) {
   form.innerHTML = updatePlanetControlsHTML(i, planetsArray);
   offCanvasBody.appendChild(form);
   addPlanetMenuStatListeners(i);
+  updatePlanetOffcanvasHeader(planet);
   updatePlanetNameInput(planet);
   hideSystemMenu();
   bsOffcanvas.show();
@@ -83,17 +83,25 @@ const updatePlanetTexture = (index) => {
 };
 
 const updatePlanetOffcanvasHeader = (planet) => {
-  const header = document.getElementById("offcanvas-title");
-  header.innerHTML = `${planet.name}`;
+  if (planet.name !== "") {
+    document.getElementById("offcanvas-title").innerHTML = planet.name;
+  } else {
+    planet.name = planet.defaultName;
+    document.getElementById("offcanvas-title").innerHTML = planet.defaultName;
+  }
+  updateSystemTable();
 };
 
 const updatePlanetNameInput = (planet) => {
   const planetNameInput = document.getElementById("planet-name-input");
-  planetNameInput.value = "";
-  planetNameInput.placeholder = planet.name;
-  planetNameInput.addEventListener("input", () => {
-    currentControlPlanet.name = planetNameInput.value;
-    updateSystemTable();
+
+  const newInput = planetNameInput.cloneNode(true);
+  planetNameInput.parentNode.replaceChild(newInput, planetNameInput);
+  newInput.value = planet.name || planet.defaultName;
+
+  newInput.addEventListener("input", () => {
+    planet.name = newInput.value;
+    updatePlanetOffcanvasHeader(planet);
   });
 };
 
