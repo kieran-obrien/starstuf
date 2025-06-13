@@ -4,7 +4,7 @@ html {
   width: 100%;
   font-family: Sansation;
   overflow-y: hidden;
-  position: fixed; /* Optional, sometimes helps */
+  position: fixed;
 }
 
 body {
@@ -88,7 +88,7 @@ table {
 }
 
 .offcanvas-header {
-  padding-bottom: 0;
+  padding-bottom: 10px;
   display: flex;
   justify-content: space-between;
 }
@@ -111,11 +111,6 @@ h5 {
 
 h6 {
   font-family: Sansation;
-}
-
-.container-md {
-  padding-left: 0;
-  padding-right: 0;
 }
 
 img,
@@ -263,8 +258,7 @@ ul {
 
 li {
   display: flex;
-  align-items: center; /* vertically center children */
-  gap: 0.5rem; /* optional spacing between icon and text */
+  align-items: center;
 }
 
 .help-icon {
@@ -288,5 +282,11 @@ li p {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .offcanvas-bottom {
+    height: 45vh !important;
   }
 }

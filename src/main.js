@@ -3,7 +3,6 @@ import "./core/light-setup.js";
 import {
   updatePlanetDistanceWhilePaused,
   updatePlanetOrbitPosition,
-  updatePlanetStats,
   updatePlanetsInScene,
 } from "./planets/planet-updates.js";
 import { scene, camera, renderer } from "./core/three-setup.js";
@@ -37,13 +36,10 @@ async function initApp() {
   updateSystemTable(planetsArray);
   adjustOffcanvasPosition();
   addSystemMenuListeners();
-  setTimeout(() => {
-    showStartButton();
-  }, 2000);
+  showStartButton();
 }
 
 function animate() {
-  updatePlanetStats(planetsArray);
   if (!isPaused) updatePlanetOrbitPosition(planetsArray, sun);
   else updatePlanetDistanceWhilePaused(planetsArray);
   updatePlanetsInScene(planetsArray);

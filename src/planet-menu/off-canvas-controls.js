@@ -3,12 +3,13 @@ import planetMaterials from "../planets/planet-material-factory";
 import updateTextureControls from "./texture-selector-controls";
 import { updateSystemTable } from "../system-menu/system-table";
 import adjustOffcanvasPosition from "../controls-ui/adjust-offcanvas-position";
+import { addPlanetMenuStatListeners } from "../planets/planet-updates";
 
 let currentControlPlanet;
 
 function updatePlanetControlsHTML(i, planetsArray) {
   return `<label for="planet-size">Mass</label>
-            <input oninput="updatePlanetSize(${i})"
+            <input 
                 type="range"
                 class = "form-range"
                 id="planet-size-${i}"
@@ -19,7 +20,7 @@ function updatePlanetControlsHTML(i, planetsArray) {
                 value="${planetsArray[i].size}"
             />
             <label for="orbit-speed">Orbit Speed</label>
-            <input oninput="updatePlanetSpeed(${i})"
+            <input
                 type="range"
                 class = "form-range"
                 id="orbit-speed-${i}"
@@ -30,7 +31,7 @@ function updatePlanetControlsHTML(i, planetsArray) {
                 value="${planetsArray[i].speed * 8000}"
             />
             <label for="planet-spin">Spin Speed</label>
-            <input oninput="updatePlanetSpinSpeed(${i})"
+            <input
                 type="range"
                 class = "form-range"
                 id="planet-spin-${i}"
@@ -67,6 +68,7 @@ function showControls(planet, i) {
   const form = document.createElement("form");
   form.innerHTML = updatePlanetControlsHTML(i, planetsArray);
   offCanvasBody.appendChild(form);
+  addPlanetMenuStatListeners(i);
   updatePlanetNameInput(planet);
   hideSystemMenu();
   bsOffcanvas.show();

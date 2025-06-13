@@ -1,40 +1,33 @@
 import { scene } from "../core/three-setup";
 import { updateSystemTable } from "../system-menu/system-table";
+import { planetsArray } from "../main";
 
-const updatePlanetStats = (planets) => {
-  // *TODO FUTURE WORK - EDIT THESE FUNCTIONS OUT OF GLOBAL SCOPE
-  const updatePlanetSize = (index) => {
-    updateSystemTable(planets);
-    const size = document.getElementById(`planet-size-${index}`).value;
-    planets[index].updatePlanetSize(size);
-  };
-  window.updatePlanetSize = updatePlanetSize;
+const addPlanetMenuStatListeners = (i) => {
+  console.log("IN STAT LISTENER FUNC");
 
-  // Update planet orbit speed
-  const updatePlanetSpeed = (index) => {
-    updateSystemTable(planets);
-    const speed = document.getElementById(`orbit-speed-${index}`).value;
-    planets[index].updatePlanetSpeed(speed);
-  };
-  window.updatePlanetSpeed = updatePlanetSpeed;
+  const sizeInput = document.getElementById(`planet-size-${i}`);
+  sizeInput.addEventListener("input", () => {
+    planetsArray[i].updatePlanetSize(sizeInput.value);
+  });
 
-  // Update planet spin speed
-  const updatePlanetSpinSpeed = (index) => {
-    const spin = document.getElementById(`planet-spin-${index}`).value;
-    planets[index].updatePlanetSpinSpeed(spin);
-  };
-  window.updatePlanetSpinSpeed = updatePlanetSpinSpeed;
+  const orbitSpeedInput = document.getElementById(`orbit-speed-${i}`);
+  orbitSpeedInput.addEventListener("input", () => {
+    planetsArray[i].updatePlanetSpeed(orbitSpeedInput.value);
+  });
 
-  // Update planet distance
-  const updatePlanetDistance = (index) => {
-    const distance = document.getElementById(`planet-distance-${index}`).value;
-    if (planets[index].inOrbit) {
-      scene.remove(planets[index].orbitPath);
-      planets[index].updatePlanetDistance(distance);
-      scene.add(planets[index].orbitPath);
-    } else planets[index].updatePlanetDistance(distance);
-  };
-  window.updatePlanetDistance = updatePlanetDistance;
+  const spinInput = document.getElementById(`planet-spin-${i}`);
+  spinInput.addEventListener("input", () => {
+    planetsArray[i].updatePlanetSpinSpeed(spinInput.value);
+  });
+
+  const distanceInput = document.getElementById(`planet-distance-${i}`);
+  distanceInput.addEventListener("input", () => {
+    if (planetsArray[i].inOrbit) {
+      scene.remove(planetsArray[i].orbitPath);
+      planetsArray[i].updatePlanetDistance(distanceInput.value);
+      scene.add(planetsArray[i].orbitPath);
+    } else planetsArray[i].updatePlanetDistance(distanceInput.value);
+  });
 };
 
 const updatePlanetsInScene = (planets) => {
@@ -92,4 +85,5 @@ export {
   updatePlanetOrbitPosition,
   updatePlanetsInScene,
   updatePlanetDistanceWhilePaused,
+  addPlanetMenuStatListeners,
 };
