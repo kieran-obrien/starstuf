@@ -290,3 +290,7 @@ li p {
     height: 45vh !important;
   }
 }
+
+label {
+  font-family: Sansation !important;
+}
