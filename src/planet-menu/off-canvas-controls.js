@@ -8,7 +8,7 @@ import { addPlanetMenuStatListeners } from "../planets/planet-updates";
 let currentControlPlanet;
 
 function updatePlanetControlsHTML(i, planetsArray) {
-  return `<label for="planet-size">Mass</label>
+  return `<br/><label for="planet-size">Mass</label>
             <input 
                 type="range"
                 class = "form-range"
@@ -85,19 +85,35 @@ const updatePlanetTexture = (index) => {
 const updatePlanetOffcanvasHeader = (planet) => {
   if (planet.name !== "") {
     document.getElementById("offcanvas-title").innerHTML = planet.name;
+    document.getElementById("planet-name-input").placeholder =
+      "Name this planet...";
   } else {
     planet.name = planet.defaultName;
     document.getElementById("offcanvas-title").innerHTML = planet.defaultName;
   }
-  updateSystemTable();
+  updateSystemTable()
 };
+
+// const updatePlanetOffcanvasDesc = (planet) => {
+//   if (planet.desc !== "") {
+//     document.getElementById("offcanvas-title").innerHTML = planet.name;
+//     document.getElementById("planet-name-input").placeholder =
+//       "Name this planet...";
+//   } else {
+//     planet.name = planet.defaultName;
+//     document.getElementById("offcanvas-title").innerHTML = planet.defaultName;
+//   }
+//   updateSystemTable()
+// };
 
 const updatePlanetNameInput = (planet) => {
   const planetNameInput = document.getElementById("planet-name-input");
 
   const newInput = planetNameInput.cloneNode(true);
   planetNameInput.parentNode.replaceChild(newInput, planetNameInput);
-  newInput.value = planet.name || planet.defaultName;
+  planet.name === planet.defaultName
+    ? "Name this planet..."
+    : (newInput.placeholder = planet.name);
 
   newInput.addEventListener("input", () => {
     planet.name = newInput.value;

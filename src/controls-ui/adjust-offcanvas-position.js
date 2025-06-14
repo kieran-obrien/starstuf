@@ -1,4 +1,7 @@
 export default function adjustOffcanvasPosition() {
+  window.addEventListener("resize", adjustOffcanvasPosition);
+  window.addEventListener("orientationchange", adjustOffcanvasPosition);
+
   console.log("ADJUST canvas pos");
   const planetMenu = document.getElementById("offcanvas-planet-menu");
   const systemMenu = document.getElementById("offcanvas-system-menu");
