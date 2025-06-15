@@ -1,6 +1,6 @@
-# 🌌 Helio
+# 🌌 Starstuf
 
-<em>**Helio**</em> is a 3D solar system simulator built with Vanilla JavaScript, Bootstrap CSS, Vite, and WebGL (via Three.js). 
+<em>**Starstuf**</em> is a 3D solar system simulator built with Vanilla JavaScript, Bootstrap CSS, Vite, and WebGL (via Three.js). 
 
 The project simulates planetary motion, allows dynamic camera control (heliocentric vs planet-follow mode), and is designed to be lightweight and interactive. The user can simulate a solar system of up to ten planets, with a range customisation options available for each planet.
 > **Currently in active development**  
@@ -27,8 +27,8 @@ If you'd like to run the project locally, follow the instructions below.
 ### 1. Clone the repository
 
 ```
-git clone https://github.com/kieran-obrien/helio.git
-cd helio
+git clone https://github.com/kieran-obrien/starstuf.git
+cd starstuf
 ```
 ### 2. Install dependencies
 ```
