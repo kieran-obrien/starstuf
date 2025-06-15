@@ -17,10 +17,10 @@ async function loadTextures() {
 async function loadThreeJsTextures(imgLoader, textureLoader) {
   const planetTextures = [];
   const planetImages = [];
-  let counter = 1;
+  const textureAmount = 16;
 
-  while (true) {
-    const texturePath = `./textures/${counter}.png`;
+  for (let i = 1; i <= textureAmount; i++) {
+    const texturePath = `./textures/${i}.png`;
 
     try {
       const texture = await new Promise((resolve, reject) => {
@@ -31,8 +31,6 @@ async function loadThreeJsTextures(imgLoader, textureLoader) {
       const pathNum = texturePath.split("/")[2].split(".")[0];
       const textureObj = new TextureObj(pathNum);
       planetTextures.push([texture, textureObj]);
-
-      counter++;
     } catch (err) {
       console.log("Textures and images loaded, continue.");
       break;
@@ -50,10 +48,7 @@ const loadTextureImages = (path, imgLoader, planetImages) => {
       planetImages.push(image);
     },
     undefined, // On progress, not needed
-    (err) => {
-      // On error (e.g., img not found, no more to load)
-      console.log("Finished loading images");
-    }
+    (err) => {}
   );
 };
 

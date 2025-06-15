@@ -1,9 +1,6 @@
 import { planetTextures } from "../core/texture-img-loader";
 import { textureLoader } from "../core/three-setup";
-import {
-  geometryPlanet,
-  geometrySun,
-} from "../planets/planet-geometry-factory";
+import { geometryPlanet, geometrySun } from "./planet-geometry-factory";
 import planetMaterials from "./planet-material-factory";
 import * as THREE from "three";
 import { scene } from "../core/three-setup";

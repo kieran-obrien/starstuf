@@ -91,7 +91,7 @@ const updatePlanetOffcanvasHeader = (planet) => {
     planet.name = planet.defaultName;
     document.getElementById("offcanvas-title").innerHTML = planet.defaultName;
   }
-  updateSystemTable()
+  updateSystemTable();
 };
 
 // const updatePlanetOffcanvasDesc = (planet) => {
@@ -135,7 +135,7 @@ const hideControls = () => {
   console.log("Attempting to hide offcanvas");
   const offcanvasElement = document.getElementById("offcanvas-planet-menu");
   const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
-  if (offcanvasElement) {
+  if (bsOffcanvas) {
     bsOffcanvas.hide();
   }
 };
