@@ -2,7 +2,7 @@
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: "/helio/",
+  base: "/starstuf/",
   esbuild: {
     target: "esnext",
   },
