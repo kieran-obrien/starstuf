@@ -55,6 +55,7 @@ function updatePlanetControlsHTML(i, planetsArray) {
 }
 
 function showControls(planet, i) {
+  console.log("SHOW");
   adjustOffcanvasPosition();
   currentControlPlanet = planet;
   updateTextureControls(planet.textureCode, planet);
@@ -70,6 +71,7 @@ function showControls(planet, i) {
   addPlanetMenuStatListeners(i);
   updatePlanetOffcanvasHeader(planet);
   updatePlanetNameInput(planet);
+  updatePlanetDescInput(planet);
   hideSystemMenu();
   bsOffcanvas.show();
 }
@@ -94,26 +96,29 @@ const updatePlanetOffcanvasHeader = (planet) => {
   updateSystemTable();
 };
 
-// const updatePlanetOffcanvasDesc = (planet) => {
-//   if (planet.desc !== "") {
-//     document.getElementById("offcanvas-title").innerHTML = planet.name;
-//     document.getElementById("planet-name-input").placeholder =
-//       "Name this planet...";
-//   } else {
-//     planet.name = planet.defaultName;
-//     document.getElementById("offcanvas-title").innerHTML = planet.defaultName;
-//   }
-//   updateSystemTable()
-// };
+const updatePlanetDescInput = (planet) => {
+  const planetDescInput = document.getElementById("planet-desc-input");
+
+  const newInput = planetDescInput.cloneNode(true);
+  planetDescInput.parentNode.replaceChild(newInput, planetDescInput);
+
+  newInput.value = planet.desc ? planet.desc : "";
+  newInput.placeholder = !planet.desc ? "Describe this planet..." : planet.desc;
+
+  newInput.addEventListener("input", () => {
+    planet.desc = newInput.value;
+  });
+};
 
 const updatePlanetNameInput = (planet) => {
   const planetNameInput = document.getElementById("planet-name-input");
 
   const newInput = planetNameInput.cloneNode(true);
   planetNameInput.parentNode.replaceChild(newInput, planetNameInput);
-  planet.name === planet.defaultName
-    ? "Name this planet..."
-    : (newInput.placeholder = planet.name);
+
+  newInput.value = planet.name !== planet.defaultName ? planet.name : "";
+  newInput.placeholder =
+    planet.name === planet.defaultName ? "Name this planet..." : planet.name;
 
   newInput.addEventListener("input", () => {
     planet.name = newInput.value;
